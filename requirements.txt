@@ -1,0 +1,7 @@
+# Project requirements
+django
+ipython
+# Test requirements
+pytest-django
+model-bakery
+faker

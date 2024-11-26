@@ -1,0 +1,8 @@
+slug = "lumino"
+bundle = [
+    "docs/README.pdf",
+    "tests/*.py",
+    "requirements.txt",
+    "justfile",
+    "pytest.ini",
+]
