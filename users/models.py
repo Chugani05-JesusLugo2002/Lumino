@@ -26,7 +26,7 @@ class Enrollment(models.Model):
         'subjects.Subject', on_delete=models.CASCADE, related_name='subject_enrollments'
     )
     enrolled_at = models.DateField(auto_now_add=True)
-    mark = models.IntegerField(null=True)
+    mark = models.PositiveSmallIntegerField(null=True)
 
     def __str__(self) -> str:
         return f'{self.student}, enrolled at {self.enrolled_at} in {self.subject}'

@@ -22,7 +22,7 @@ def user_login(request: HttpRequest) -> HttpResponse:
 
 def user_logout(request: HttpRequest) -> HttpResponse:
     logout(request)
-    return render(request, 'accounts/logout.html')
+    return HttpResponse('Esta monda va a home page')
 
 
 def user_signup(request: HttpRequest) -> HttpResponse:
