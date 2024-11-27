@@ -14,16 +14,24 @@ class Profile(models.Model):
         blank=True, null=True, upload_to='avatars', default='avatars/noavatar.png'
     )
 
+    def is_student(self):
+        return True if self.role == Profile.Role.STUDENT else False
+
+    def get_subject_list(self):
+        if self.is_student(self):
+            pass
+        # TODO: Subject list depends on user role
+
     def __str__(self) -> str:
         return f'{self.role}: {self.user}'
 
 
 class Enrollment(models.Model):
     student = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='student_enrollments'
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='enrollments'
     )
     subject = models.ForeignKey(
-        'subjects.Subject', on_delete=models.CASCADE, related_name='subject_enrollments'
+        'subjects.Subject', on_delete=models.CASCADE, related_name='enrollments'
     )
     enrolled_at = models.DateField(auto_now_add=True)
     mark = models.PositiveSmallIntegerField(null=True)

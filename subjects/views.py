@@ -1,8 +1,10 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
+from django.shortcuts import render
 
 
 def subject_list(request: HttpRequest) -> HttpResponse:
-    pass
+    # TODO: Subject list depends on user role
+    return render(request, 'subjects/subject-list.html', dict(subjects=subjects))
 
 
 def subject_detail(request: HttpRequest) -> HttpResponse:
