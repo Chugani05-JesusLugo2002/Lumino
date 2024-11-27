@@ -1,5 +1,6 @@
 # Project requirements
 django
+pillow
 ipython
 # Test requirements
 pytest-django
