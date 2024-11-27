@@ -4,6 +4,7 @@
   <form method="post">
     {% csrf_token %}
     {{ form }}
-    <input type="submit" value="Enviar">
+    <input type="submit" value="Login">
   </form>
+  <p>No account? <a href="{% url "signup" %}">Create one!</a></p>
 {% endblock main %}
