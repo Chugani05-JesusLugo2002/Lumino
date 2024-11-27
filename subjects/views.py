@@ -1,3 +1,37 @@
-from django.shortcuts import render
+from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 
-# Create your views here.
+
+def subject_list(request: HttpRequest) -> HttpResponse:
+    pass
+
+
+def subject_detail(request: HttpRequest) -> HttpResponse:
+    pass
+
+
+def subject_lessons(request: HttpRequest) -> HttpResponse:
+    pass
+
+
+def lesson_detail(request: HttpRequest) -> HttpResponse:
+    pass
+
+
+def add_lesson(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
+    pass
+
+
+def edit_lesson(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
+    pass
+
+
+def delete_lesson(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
+    pass
+
+
+def mark_list(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
+    pass
+
+
+def edit_marks(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
+    pass
