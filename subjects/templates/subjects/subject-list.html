@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block main %}
+  <ul>
+    {% for subject in subjects %}
+      <li>{{ subject }}</li>
+    {% endfor %}
+  </ul>
+{% endblock main %}

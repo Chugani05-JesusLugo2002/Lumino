@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 
 def subject_list(request: HttpRequest) -> HttpResponse:
-    # TODO: Subject list depends on user role
+    subjects = request.user.profile.get_subject_list()
     return render(request, 'subjects/subject-list.html', dict(subjects=subjects))
 
 

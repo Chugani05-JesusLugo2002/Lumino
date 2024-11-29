@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.db import models
 
-
 class Profile(models.Model):
     class Role(models.TextChoices):
         STUDENT = 'S', 'Student'
@@ -18,9 +17,9 @@ class Profile(models.Model):
         return True if self.role == Profile.Role.STUDENT else False
 
     def get_subject_list(self):
-        if self.is_student(self):
-            pass
-        # TODO: Subject list depends on user role
+        if self.is_student():
+            return self.user.student_subjects.all()
+        return self.user.teacher_subjects.all()
 
     def __str__(self) -> str:
         return f'{self.role}: {self.user}'
@@ -34,7 +33,7 @@ class Enrollment(models.Model):
         'subjects.Subject', on_delete=models.CASCADE, related_name='enrollments'
     )
     enrolled_at = models.DateField(auto_now_add=True)
-    mark = models.PositiveSmallIntegerField(null=True)
+    mark = models.PositiveSmallIntegerField(null=True, blank=True)
 
     def __str__(self) -> str:
         return f'{self.student}, enrolled at {self.enrolled_at} in {self.subject}'

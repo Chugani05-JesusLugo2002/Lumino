@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from accounts.forms import LoginForm, SignupForm
 from users.models import Profile
@@ -13,8 +13,7 @@ def user_login(request: HttpRequest) -> HttpResponse:
             password = form.cleaned_data['password']
             if user := authenticate(request, username=username, password=password):
                 login(request, user)
-                # return redirect('subjects:subject-list')
-                return HttpResponse('logueado')
+                return redirect('subjects:subject-list')
     else:
         form = LoginForm()
     return render(request, 'accounts/login.html', dict(form=form))
@@ -22,7 +21,7 @@ def user_login(request: HttpRequest) -> HttpResponse:
 
 def user_logout(request: HttpRequest) -> HttpResponse:
     logout(request)
-    return HttpResponse('Esta monda va a home page')
+    return redirect('login')
 
 
 def user_signup(request: HttpRequest) -> HttpResponse:
@@ -32,8 +31,7 @@ def user_signup(request: HttpRequest) -> HttpResponse:
             new_profile = Profile(user=user)
             new_profile.save()
             login(request, user)
-            # return redirect('subjects:subject-list')
-            return HttpResponse('perfil creado')
+            return redirect('subjects:subject-list')
     else:
         form = SignupForm()
     return render(request, 'accounts/signup.html', dict(form=form))
