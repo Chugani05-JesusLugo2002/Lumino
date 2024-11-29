@@ -83,33 +83,6 @@ setup: install-reqs && migrate create-su
     sed -i -E "s/(TIME_ZONE).*/\1 = 'Atlantic\/Canary'/" ./main/settings.py
     echo "✔ Fixed TIME_ZONE='Atlantic/Canary' and LANGUAGE_CODE='es-es'"
 
-# Generate fake data and populate Django database
-[private]
-@gen-data *args: check-venv
-    #!/usr/bin/env bash
-    ./manage.py gen_data {{ args }}
-
-# Dump fixtures
-[private]
-dump-data: gen-data
-    ./manage.py dumpdata --format json --indent 2 auth -o fixtures/auth.json
-    ./manage.py dumpdata --format json --indent 2 slots -o fixtures/slots.json
-    ./manage.py dumpdata --format json --indent 2 appointments -o fixtures/appointments.json
-
-# Load fixtures into database
-load-data: check-venv
-    #!/usr/bin/env bash
-    ./manage.py loaddata fixtures/auth.json
-    ./manage.py loaddata fixtures/slots.json
-    ./manage.py loaddata fixtures/appointments.json
-    echo --------------------------------
-    ./manage.py shell -c '
-    from django.contrib.auth.models import User
-    print("Available users (with password 1234)\n")
-    for user in User.objects.exclude(is_superuser=True):
-        print(user)
-    '
-
 # Create a superuser (or update it if already exists)
 create-su username="admin" password="admin" email="admin@example.com":
     #!/usr/bin/env bash

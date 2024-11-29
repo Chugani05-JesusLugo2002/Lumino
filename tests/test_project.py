@@ -1,11 +1,41 @@
 import pytest
 from django.conf import settings
+from model_bakery import baker
+
+from subjects.models import Lesson, Subject
+from users.models import Enrollment, Profile
+
+# ==============================================================================
+# FIXTURES
+# ==============================================================================
+
+
+@pytest.fixture
+def subject():
+    return baker.make(Subject, _fill_optional=True)
+
+
+@pytest.fixture
+def lesson():
+    return baker.make(Lesson, _fill_optional=True)
+
+
+@pytest.fixture
+def enrollment():
+    return baker.make(Enrollment, _fill_optional=True)
+
+
+@pytest.fixture
+def profile():
+    return baker.make(Profile, _fill_optional=True)
+
 
 # ==============================================================================
 # TESTS
 # ==============================================================================
 
 
+@pytest.mark.django_db
 def test_required_apps_are_installed():
     PROPER_APPS = ('accounts', 'shared', 'users', 'subjects')
 
@@ -21,42 +51,44 @@ def test_required_apps_are_installed():
 
 
 @pytest.mark.django_db
-def test_subject_model_has_proper_fields(slot):
+def test_subject_model_has_proper_fields(subject):
     PROPER_FIELDS = ('code', 'name', 'teacher', 'students')
     for field in PROPER_FIELDS:
-        assert getattr(slot, field) is not None, f'El campo <{field}> no está en el modelo Subject.'
+        assert (
+            getattr(subject, field) is not None
+        ), f'El campo <{field}> no está en el modelo Subject.'
 
 
 @pytest.mark.django_db
-def test_lesson_model_has_proper_fields(appointment):
-    PROPER_FIELDS = ('title', 'content')
+def test_lesson_model_has_proper_fields(lesson):
+    PROPER_FIELDS = ('subject', 'title', 'content')
     for field in PROPER_FIELDS:
         assert (
-            getattr(appointment, field) is not None
+            getattr(lesson, field) is not None
         ), f'El campo <{field}> no está en el modelo Lesson.'
 
 
 @pytest.mark.django_db
-def test_enrollment_model_has_proper_fields(appointment):
+def test_enrollment_model_has_proper_fields(enrollment):
     PROPER_FIELDS = ('student', 'subject', 'enrolled_at', 'mark')
     for field in PROPER_FIELDS:
         assert (
-            getattr(appointment, field) is not None
+            getattr(enrollment, field) is not None
         ), f'El campo <{field}> no está en el modelo Enrollment.'
 
 
 @pytest.mark.django_db
-def test_profile_model_has_proper_fields(appointment):
+def test_profile_model_has_proper_fields(profile):
     PROPER_FIELDS = ('user', 'role', 'bio', 'avatar')
     for field in PROPER_FIELDS:
         assert (
-            getattr(appointment, field) is not None
+            getattr(profile, field) is not None
         ), f'El campo <{field}> no está en el modelo Profile.'
 
 
 @pytest.mark.django_db
 def test_models_are_available_on_admin(admin_client):
-    MODELS = ('subjects.Subject', 'subjects.Lesson', 'users.Profile')
+    MODELS = ('subjects.Subject', 'subjects.Lesson', 'users.Profile', 'users.Enrollment')
 
     for model in MODELS:
         url_model_path = model.replace('.', '/').lower()
