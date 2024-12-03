@@ -1,0 +1,11 @@
+<h1>Otra vez, estás en {{ subject }}</h1>
+
+<a href="{% url "subjects:add-lesson" subject.code %}">Add lesson</a>
+
+<ul>
+  {% for lesson in lessons %}
+    <li>{{ lesson }} - <a href="{{ lesson.get_absolute_url }}">Details</a> - <a href="">Edit</a> - <a href="">Delete</a></li>
+  {% empty %}
+    No lessons available yet in this subject.
+  {% endfor %}
+</ul>

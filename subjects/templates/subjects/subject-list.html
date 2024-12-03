@@ -3,7 +3,7 @@
 {% block main %}
   <ul>
     {% for subject in subjects %}
-      <li>{{ subject }}</li>
+      <li>{{ subject }} - <a href="{{ subject.get_absolute_url }}">Details</a></li>
     {% endfor %}
   </ul>
 {% endblock main %}

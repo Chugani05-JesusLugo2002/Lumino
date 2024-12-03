@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.urls import reverse
 
 
 class Subject(models.Model):
@@ -17,6 +18,9 @@ class Subject(models.Model):
     def __str__(self) -> str:
         return f'{self.name} ({self.code}), imparted by {self.teacher}'
 
+    def get_absolute_url(self):
+        return reverse('subjects:subject-detail', kwargs={'subject_code': self.code})
+
 
 class Lesson(models.Model):
     subject = models.ForeignKey(
@@ -27,3 +31,9 @@ class Lesson(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+    def get_absolute_url(self):
+        return reverse(
+            'subjects:lesson-detail',
+            kwargs={'subject_code': self.subject.code, 'lesson_pk': self.pk},
+        )

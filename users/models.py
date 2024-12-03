@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 
+
 class Profile(models.Model):
     class Role(models.TextChoices):
         STUDENT = 'S', 'Student'
@@ -12,6 +13,8 @@ class Profile(models.Model):
     avatar = models.ImageField(
         blank=True, null=True, upload_to='avatars', default='avatars/noavatar.png'
     )
+
+    # TODO: Implements method save() with Profile.objects.create(user=user)
 
     def is_student(self):
         return True if self.role == Profile.Role.STUDENT else False
