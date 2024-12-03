@@ -23,6 +23,7 @@ import shared.views
 import users.views
 
 urlpatterns = [
+    path('__reload__/', include('django_browser_reload.urls')),
     path('', shared.views.index, name='home'),
     path('admin/', admin.site.urls),
     path('login/', accounts.views.user_login, name='login'),
