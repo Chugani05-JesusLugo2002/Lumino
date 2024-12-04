@@ -6,11 +6,8 @@
 <form action="" method="POST" novalidate>
     {% csrf_token %}
     <ul>
-        {% for enroll in enrolls %}
-            <li>
-                Student: {{ enroll.student }} | 
-                Mark: <input type="text" size="3" value="{{ enroll.get_mark_value }}"></input>
-            </li>    
+        {% for form in formset %}
+            {{ form }}
         {% endfor %}
     </ul>
     <input type="submit" value="Save marks">

@@ -1,9 +1,10 @@
 from django.contrib.auth.decorators import login_required
+from django.forms import modelformset_factory
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect, render
 
 from .forms import AddLessonForm, EditLessonForm
-from .models import Lesson, Subject
+from .models import Enrollment, Lesson, Subject
 
 
 @login_required
@@ -69,11 +70,11 @@ def mark_list(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRes
 @login_required
 def edit_marks(request: HttpRequest, subject_code: str) -> HttpResponse | HttpResponseForbidden:
     subject = Subject.objects.get(code=subject_code)
-    enrolls = subject.enrollments.all()
+    enrollment_formset = modelformset_factory(Enrollment, fields=['mark'], extra=0)
+    formset = enrollment_formset(queryset=Enrollment.objects.filter(subject=subject))
     if request.method == 'POST':
-        # TODO: Save new marks on database (Ask Sergio)
         return redirect('subjects:mark-list', subject_code=subject.code)
-    return render(request, 'subjects/edit-marks.html', dict(subject=subject, enrolls=enrolls))
+    return render(request, 'subjects/edit-marks.html', dict(subject=subject, formset=formset))
 
 
 @login_required
