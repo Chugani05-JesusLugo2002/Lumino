@@ -1,3 +1,12 @@
 <h1>Estás en {{ subject }}</h1>
-<a href="{% url "subjects:subject-lessons" subject.code %}">Lessons</a>
 <a href="{% url "subjects:mark-list" subject.code %}">Marks</a>
+
+<a href="{% url "subjects:add-lesson" subject.code %}">Add lesson</a>
+
+<ul>
+  {% for lesson in lessons %}
+    <li>{{ lesson }} - <a href="{{ lesson.get_absolute_url }}">Details</a> - <a href="{% url "subjects:edit-lesson" subject.code lesson.pk %}">Edit</a> - <a href="">Delete</a></li>
+  {% empty %}
+    No lessons available yet in this subject.
+  {% endfor %}
+</ul>

@@ -15,14 +15,8 @@ def subject_list(request: HttpRequest) -> HttpResponse:
 @login_required
 def subject_detail(request: HttpRequest, subject_code: str) -> HttpResponse:
     subject = Subject.objects.get(code=subject_code)
-    return render(request, 'subjects/subject-detail.html', dict(subject=subject))
-
-
-@login_required
-def subject_lessons(request: HttpRequest, subject_code: str) -> HttpResponse:
-    subject = Subject.objects.get(code=subject_code)
     lessons = subject.lessons.all()
-    return render(request, 'subjects/subject-lessons.html', dict(subject=subject, lessons=lessons))
+    return render(request, 'subjects/subject-detail.html', dict(subject=subject, lessons=lessons))
 
 
 @login_required
