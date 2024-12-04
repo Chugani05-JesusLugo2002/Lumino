@@ -40,3 +40,6 @@ class Enrollment(models.Model):
 
     def __str__(self) -> str:
         return f'{self.student}, enrolled at {self.enrolled_at} in {self.subject}'
+    
+    def get_mark_value(self) -> str:
+        return self.mark if self.mark != None else ""

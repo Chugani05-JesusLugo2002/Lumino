@@ -1,1 +1,13 @@
+<h1>You are in {{ subject.code }} marks</h1>
 
+<hr>
+
+<a href="{% url "subjects:edit-marks" subject.code %}">Edit marks</a>
+
+<ul>
+    {% for enroll in enrolls %}
+        <li>
+            Student: {{ enroll.student }} | Mark: {{ enroll.mark }}
+        </li>    
+    {% endfor %}
+</ul>

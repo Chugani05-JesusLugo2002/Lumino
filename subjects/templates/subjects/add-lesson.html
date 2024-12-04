@@ -1,0 +1,8 @@
+<h1>Adding lesson</h1>
+
+<form action="" method="POST" novalidate>
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Add lesson">
+    <a href="{{ subject.get_absolute_url }}">Cancel</a>
+</form>

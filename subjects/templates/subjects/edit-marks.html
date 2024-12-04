@@ -1,0 +1,18 @@
+<h1>You are in {{ subject.code }} marks</h1>
+
+<hr>
+
+
+<form action="" method="POST" novalidate>
+    {% csrf_token %}
+    <ul>
+        {% for enroll in enrolls %}
+            <li>
+                Student: {{ enroll.student }} | 
+                Mark: <input type="text" size="3" value="{{ enroll.get_mark_value }}"></input>
+            </li>    
+        {% endfor %}
+    </ul>
+    <input type="submit" value="Save marks">
+</form>
+

@@ -1,3 +1,8 @@
 <h1>{{ lesson }}</h1>
 <h2>Subject: {{ lesson.subject }}</h2>
-<h3>{{ lesson.content }}</h3>
+<p>{{ lesson.content }}</p>
+
+<hr>
+
+<a href="{% url "subjects:edit-lesson" subject.code lesson.pk %}">Edit</a>
+<a href="">Delete</a>
