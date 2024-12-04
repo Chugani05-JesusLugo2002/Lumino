@@ -70,11 +70,22 @@ def mark_list(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRes
 @login_required
 def edit_marks(request: HttpRequest, subject_code: str) -> HttpResponse | HttpResponseForbidden:
     subject = Subject.objects.get(code=subject_code)
+    enrolls = Enrollment.objects.filter(subject=subject)
     enrollment_formset = modelformset_factory(Enrollment, fields=['mark'], extra=0)
-    formset = enrollment_formset(queryset=Enrollment.objects.filter(subject=subject))
     if request.method == 'POST':
+        formset = enrollment_formset(request.POST, queryset=enrolls)
+        for form in formset:
+            if form.is_valid():
+                form.save()
         return redirect('subjects:mark-list', subject_code=subject.code)
-    return render(request, 'subjects/edit-marks.html', dict(subject=subject, formset=formset))
+    else:
+        formset = enrollment_formset(queryset=enrolls)
+        enrolls_and_formset = zip(enrolls, formset)
+    return render(
+        request,
+        'subjects/edit-marks.html',
+        dict(subject=subject, enrolls_and_formset=enrolls_and_formset, formset=formset),
+    )
 
 
 @login_required

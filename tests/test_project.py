@@ -4,8 +4,8 @@ from faker import Faker
 from model_bakery import baker
 from pytest_django.asserts import assertContains, assertRedirects
 
-from subjects.models import Lesson, Subject
-from users.models import Enrollment, Profile
+from subjects.models import Enrollment, Lesson, Subject
+from users.models import Profile
 
 # ==============================================================================
 # FIXTURES
@@ -228,7 +228,7 @@ def test_signup_contains_a_link_to_login(client):
 
 @pytest.mark.django_db
 def test_models_are_available_on_admin(admin_client):
-    MODELS = ('subjects.Subject', 'subjects.Lesson', 'users.Profile', 'users.Enrollment')
+    MODELS = ('subjects.Subject', 'subjects.Lesson', 'subjects.Enrollment', 'users.Profile')
 
     for model in MODELS:
         url_model_path = model.replace('.', '/').lower()

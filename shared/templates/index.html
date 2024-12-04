@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Lumino | Home page{% endblock title %}
+
+{% block main %}
+  <h1><i class="bi bi-stars"></i> Welcome to Lumino</h1>
+  <div class="mt-3">
+    <a href="{% url 'signup' %}" class="btn btn-success">Signup</a></p>
+    <a href="{% url 'login' %}" class="btn btn-danger">Login</a></p>
+  </div>
+{% endblock main %}
