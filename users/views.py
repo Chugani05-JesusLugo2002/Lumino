@@ -13,13 +13,5 @@ def request_certificate(request: HttpRequest) -> HttpResponse:
     pass
 
 
-def enroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
-    pass
-
-
-def unenroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
-    pass
-
-
 def leave(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
     pass

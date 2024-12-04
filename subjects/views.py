@@ -2,8 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect, render
 
-from .models import Lesson, Subject
 from .forms import AddLessonForm, EditLessonForm
+from .models import Lesson, Subject
 
 
 @login_required
@@ -45,7 +45,9 @@ def add_lesson(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRe
 
 
 @login_required
-def edit_lesson(request: HttpRequest, subject_code: str, lesson_pk: int) -> HttpResponse | HttpResponseForbidden:
+def edit_lesson(
+    request: HttpRequest, subject_code: str, lesson_pk: int
+) -> HttpResponse | HttpResponseForbidden:
     lesson = Lesson.objects.get(pk=lesson_pk)
     subject = lesson.subject
     if request.method == 'POST':
@@ -78,3 +80,13 @@ def edit_marks(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRe
         # TODO: Save new marks on database (Ask Sergio)
         return redirect('subjects:mark-list', subject_code=subject.code)
     return render(request, 'subjects/edit-marks.html', dict(subject=subject, enrolls=enrolls))
+
+
+@login_required
+def enroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
+    pass
+
+
+@login_required
+def unenroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
+    pass
