@@ -26,20 +26,3 @@ class Profile(models.Model):
 
     def __str__(self) -> str:
         return f'{self.role}: {self.user}'
-
-
-class Enrollment(models.Model):
-    student = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='enrollments'
-    )
-    subject = models.ForeignKey(
-        'subjects.Subject', on_delete=models.CASCADE, related_name='enrollments'
-    )
-    enrolled_at = models.DateField(auto_now_add=True)
-    mark = models.PositiveSmallIntegerField(null=True, blank=True)
-
-    def __str__(self) -> str:
-        return f'{self.student}, enrolled at {self.enrolled_at} in {self.subject}'
-    
-    def get_mark_value(self) -> str:
-        return self.mark if self.mark != None else ""
