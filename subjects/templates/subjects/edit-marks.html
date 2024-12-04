@@ -1,21 +1,14 @@
-{% extends "base.html" %}
-
-{% block title %}Lumino | Editing marks{% endblock title %}
-
-{% block main %}
 <h1>Editing marks</h1>
-<form action="" method="POST" novalidate>
+<hr>
+<form method="POST" novalidate>
     {% csrf_token %}
-    <ul class="list-group">
-        {{ formset.management_form}}
-        {% for enroll, form in enrolls_and_formset %}
-            <div class="list-group-item d-flex">
-                <span class="mx-5">Student {{ enroll.student }}</span> 
-                <span>{{ form }}</span>
-            </div>
-        {% endfor %}
-    </ul>
+    {{ formset.management_form}}
+    {% for enroll, form in enrolls_and_formset %}
+        <div style="display: flex;">
+            Student {{ enroll.student }} | {{ form }}
+        </div>
+    {% endfor %}
     <input type="submit" value="Save marks">
 </form>
-{% endblock main %}
+
 

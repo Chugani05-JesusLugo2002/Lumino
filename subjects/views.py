@@ -3,7 +3,7 @@ from django.forms import modelformset_factory
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect, render
 
-from .forms import AddLessonForm, EditLessonForm
+from .forms import AddLessonForm, EditLessonForm, EditMarkForm
 from .models import Enrollment, Lesson, Subject
 
 
@@ -70,17 +70,14 @@ def mark_list(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRes
 @login_required
 def edit_marks(request: HttpRequest, subject_code: str) -> HttpResponse | HttpResponseForbidden:
     subject = Subject.objects.get(code=subject_code)
-    enrolls = Enrollment.objects.filter(subject=subject)
-    enrollment_formset = modelformset_factory(Enrollment, fields=['mark'], extra=0)
+    enrolls = subject.enrollments.all()
+    enrolls_formset = modelformset_factory(Enrollment, form=EditMarkForm, extra=0)
+    formset = enrolls_formset(request.POST or None, queryset=enrolls)
     if request.method == 'POST':
-        formset = enrollment_formset(request.POST, queryset=enrolls)
-        for form in formset:
-            if form.is_valid():
-                form.save()
-        return redirect('subjects:mark-list', subject_code=subject.code)
-    else:
-        formset = enrollment_formset(queryset=enrolls)
-        enrolls_and_formset = zip(enrolls, formset)
+        if formset.is_valid():
+            formset.save()
+            return redirect('subjects:mark-list', subject_code=subject.code)
+    enrolls_and_formset = zip(enrolls, formset)
     return render(
         request,
         'subjects/edit-marks.html',
