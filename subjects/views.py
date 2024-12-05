@@ -10,21 +10,21 @@ from .models import Enrollment, Lesson, Subject
 @login_required
 def subject_list(request: HttpRequest) -> HttpResponse:
     subjects = request.user.profile.get_subject_list()
-    return render(request, 'subjects/subject-list.html', dict(subjects=subjects))
+    return render(request, 'subjects/subject/list.html', dict(subjects=subjects))
 
 
 @login_required
 def subject_detail(request: HttpRequest, subject_code: str) -> HttpResponse:
     subject = Subject.objects.get(code=subject_code)
     lessons = subject.lessons.all()
-    return render(request, 'subjects/subject-detail.html', dict(subject=subject, lessons=lessons))
+    return render(request, 'subjects/subject/detail.html', dict(subject=subject, lessons=lessons))
 
 
 @login_required
 def lesson_detail(request: HttpRequest, subject_code: str, lesson_pk: int) -> HttpResponse:
     lesson = Lesson.objects.get(pk=lesson_pk)
     subject = lesson.subject
-    return render(request, 'subjects/lesson-detail.html', dict(subject=subject, lesson=lesson))
+    return render(request, 'subjects/lesson/detail.html', dict(subject=subject, lesson=lesson))
 
 
 @login_required
@@ -36,7 +36,7 @@ def add_lesson(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRe
             return redirect(lesson)
     else:
         form = AddLessonForm(subject)
-    return render(request, 'subjects/add-lesson.html', dict(subject=subject, form=form))
+    return render(request, 'subjects/lesson/add.html', dict(subject=subject, form=form))
 
 
 @login_required
@@ -51,7 +51,7 @@ def edit_lesson(
             return redirect(lesson)
     else:
         form = EditLessonForm(instance=lesson)
-    return render(request, 'subjects/edit-lesson.html', dict(subject=subject, form=form))
+    return render(request, 'subjects/lesson/edit.html', dict(subject=subject, form=form))
 
 
 @login_required
@@ -64,7 +64,7 @@ def delete_lesson(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
 def mark_list(request: HttpRequest, subject_code: str) -> HttpResponse | HttpResponseForbidden:
     subject = Subject.objects.get(code=subject_code)
     enrolls = subject.enrollments.all()
-    return render(request, 'subjects/mark-list.html', dict(subject=subject, enrolls=enrolls))
+    return render(request, 'subjects/mark/list.html', dict(subject=subject, enrolls=enrolls))
 
 
 @login_required
@@ -80,7 +80,7 @@ def edit_marks(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRe
     enrolls_and_formset = zip(enrolls, formset)
     return render(
         request,
-        'subjects/edit-marks.html',
+        'subjects/mark/marks-edit.html',
         dict(subject=subject, enrolls_and_formset=enrolls_and_formset, formset=formset),
     )
 
