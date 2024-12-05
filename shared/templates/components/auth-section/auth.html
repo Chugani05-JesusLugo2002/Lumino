@@ -1,0 +1,10 @@
+<span class="nav-item dropdown">
+    <button class="nav-item dropdown-toggle btn" data-bs-toggle="dropdown">
+        {{ user }}
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="#" class="dropdown-item"><i class="bi bi-person-fill"></i> My profile</a></li>
+        <li><a href="#" class="dropdown-item"><i class="bi bi-moon-fill"></i> Change theme</a></li>
+        <li><a href="{% url "logout" %}" class="dropdown-item"><i class="bi bi-door-open-fill"></i> Logout</a></li>
+    </ul>
+</span>
