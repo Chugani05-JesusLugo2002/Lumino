@@ -1,6 +1,7 @@
 <span class="nav-item dropdown">
-    <button class="nav-item dropdown-toggle btn" data-bs-toggle="dropdown">
-        {{ user }}
+    <button class="nav-item dropdown-toggle badge d-flex align-items-center p-1 pe-2 text-dark bg-light-subtle border border-dark-subtle rounded-pill" data-bs-toggle="dropdown">
+        <img class="rounded-circle me-1" width="32" height="32" src="{{ user.profile.avatar.url }}" alt="profile avatar"> 
+        <span style="font-size: 16px">{{ user }}</span>
     </button>
     <ul class="dropdown-menu">
         <li><a href="#" class="dropdown-item"><i class="bi bi-person-fill"></i> My profile</a></li>
