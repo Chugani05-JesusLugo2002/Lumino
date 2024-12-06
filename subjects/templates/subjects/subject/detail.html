@@ -1,12 +1,36 @@
-<h1>Estás en {{ subject }}</h1>
-<a href="{% url "subjects:mark-list" subject.code %}">Marks</a>
+{% extends "base.html" %}
 
-<a href="{% url "subjects:add-lesson" subject.code %}">Add lesson</a>
+{% block title %}Lumino | {{ subject.code }} {% endblock %}
 
-<ul>
-  {% for lesson in lessons %}
-    <li>{{ lesson }} - <a href="{{ lesson.get_absolute_url }}">Details</a> - <a href="{% url "subjects:edit-lesson" subject.code lesson.pk %}">Edit</a> - <a href="">Delete</a></li>
-  {% empty %}
-    No lessons available yet in this subject.
-  {% endfor %}
-</ul>
+{% block main %}
+  <div class="my-3 d-flex justify-content-between align-items-center">
+    <h1>{{ subject }}</h1>
+    {% if user.profile.is_student %}
+      <p>Your mark is ##</p>
+    {% else %}
+      <div>
+        <a href="{% url "subjects:add-lesson" subject.code %}" class="btn btn-success">Add lesson</a>
+        <a href="{% url "subjects:mark-list" subject.code %}" class="btn btn-outline-primary">Marks</a>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="list-group list-group-flush">
+    {% for lesson in lessons %}
+    <div class="row">
+      <div class="btn-group my-1">
+        <a href="{{ lesson.get_absolute_url }}" class="list-group-item btn btn-light col-12 text-start">
+          <i class="bi bi-book mx-2"></i> {{ lesson }}
+        </a>
+        <a href="{{ lesson.get_edit_url }}" class="btn btn-primary"><i class="bi bi-pen-fill"></i></a>
+        <a href="{{ lesson.get_delete_url }}" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+      </div>
+
+    </div>
+    {% empty %}
+      <div class="alert alert-warning" role="alert">
+        <i class="bi bi-exclamation-diamond"></i> No lessons available yet in this subject.
+      </div>      
+    {% endfor %}
+  </div>
+{% endblock %}

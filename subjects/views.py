@@ -55,9 +55,11 @@ def edit_lesson(
 
 
 @login_required
-def delete_lesson(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
-    # TODO: Implements as Bootstrap Modal! -> Base.html implementation pending
-    pass
+def delete_lesson(request: HttpRequest, subject_code: str, lesson_pk: int) -> HttpResponse | HttpResponseForbidden:
+    lesson = Lesson.objects.get(pk=lesson_pk)
+    subject = lesson.subject
+    lesson.delete()
+    return redirect(subject)
 
 
 @login_required
