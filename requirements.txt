@@ -8,3 +8,4 @@ pillow
 ipython
 crispy-bootstrap5==2024.10
 django-browser-reload==1.17.0
+django-markdownify
