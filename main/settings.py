@@ -44,7 +44,33 @@ INSTALLED_APPS = [
     'django_browser_reload',
     'crispy_forms',
     'crispy_bootstrap5',
+    'markdownify.apps.MarkdownifyConfig'
 ]
+
+MARKDOWNIFY = {
+    "default": {
+        "WHITELIST_TAGS": [
+            'a', 
+            'p', 
+            'h1', 
+            'h2', 
+            'h3', 
+            'h4', 
+            'h5',
+            'abbr',
+            'acronym',
+            'b',
+            'blockquote',
+            'em',
+            'i',
+            'li',
+            'ol',
+            'p',
+            'strong',
+            'ul'
+            ]
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
