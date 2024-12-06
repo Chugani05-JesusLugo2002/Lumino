@@ -28,8 +28,6 @@ def user_signup(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         if (form := SignupForm(request.POST)).is_valid():
             user = form.save()
-            new_profile = Profile(user=user)
-            new_profile.save()
             login(request, user)
             return redirect('subjects:subject-list')
     else:

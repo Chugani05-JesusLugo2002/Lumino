@@ -14,8 +14,6 @@ class Profile(models.Model):
         blank=True, null=True, upload_to='avatars', default='avatars/noavatar.png'
     )
 
-    # TODO: Implements method save() with Profile.objects.create(user=user)
-
     def is_student(self):
         return True if self.role == Profile.Role.STUDENT else False
 
