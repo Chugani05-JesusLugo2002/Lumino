@@ -16,7 +16,7 @@ class Subject(models.Model):
     )
 
     def __str__(self) -> str:
-        return f'{self.name} ({self.code}), imparted by {self.teacher}'
+        return f'{self.code} - {self.name}'
 
     def get_absolute_url(self):
         return reverse('subjects:subject-detail', kwargs={'subject_code': self.code})

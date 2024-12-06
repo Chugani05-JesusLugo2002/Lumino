@@ -14,11 +14,12 @@ class Profile(models.Model):
         blank=True, null=True, upload_to='avatars', default='avatars/noavatar.png'
     )
 
-    def is_student(self):
+    @property
+    def is_student(self) -> bool:
         return True if self.role == Profile.Role.STUDENT else False
 
     def get_subject_list(self):
-        if self.is_student():
+        if self.is_student:
             return self.user.student_subjects.all()
         return self.user.teacher_subjects.all()
 

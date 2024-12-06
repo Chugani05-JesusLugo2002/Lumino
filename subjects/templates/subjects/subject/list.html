@@ -1,9 +1,30 @@
 {% extends "base.html" %}
 
+{% block title %}Lumino | Subject list{% endblock %}
+
 {% block main %}
-  <ul>
+  <div class="d-flex justify-content-between align-items-center">
+    <h1 class="my-3">Subjects</h1>
+    {% if user.profile.is_student %}
+      <div>
+        <a href="#" class="btn btn-success">Enroll</a>
+        <a href="#" class="btn btn-outline-danger">Un-enroll</a>
+      </div>
+    {% endif %}
+  </div>
+  <div class="list-group list-group-flush">
     {% for subject in subjects %}
-      <li>{{ subject }} - <a href="{{ subject.get_absolute_url }}">Details</a></li>
+      <a href="{{ subject.get_absolute_url }}" class="list-group-item list-group-item-action border-bottom d-flex justify-content-between">
+        <div><i class="bi bi-box-arrow-in-right mx-2"></i> {{ subject }}</div>
+        <div>
+          <span class="mx-3" data-bs-toggle="tooltip" data-bs-title="Students"><i class="bi bi-pencil"></i> {{ subject.students.count }}</span>
+          <span data-bs-toggle="tooltip" data-bs-title="Lessons"><i class="bi bi-book"></i> {{ subject.lessons.count }}</span>
+        </div>
+      </a>
+    {% empty %}
+    <p class="bg-warning-subtle text-warning-emphasis px-3 py-3">
+      <i class="bi bi-exclamation-diamond"></i> There are no subjects assigned! Please enroll in one o ask an administrator to assign it.
+    </p>
     {% endfor %}
-  </ul>
-{% endblock main %}
+  </div>
+{% endblock %}
