@@ -82,7 +82,7 @@ def edit_marks(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRe
     enrolls_and_formset = zip(enrolls, formset)
     return render(
         request,
-        'subjects/mark/marks-edit.html',
+        'subjects/mark/edit.html',
         dict(subject=subject, enrolls_and_formset=enrolls_and_formset, formset=formset),
     )
 
