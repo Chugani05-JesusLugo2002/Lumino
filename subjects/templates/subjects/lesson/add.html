@@ -9,7 +9,7 @@
     <form action="" method="POST" novalidate class="needs-validation">
         {% csrf_token %}
         <div class="card shadow bg-light p-4">
-            {{ form|crispy }}
+            {% crispy form %}
         </div>
         <div class="mt-4 d-flex justify-content-between">
             <a href="{{ subject.get_absolute_url }}" class="btn btn-secondary btn-lg">
