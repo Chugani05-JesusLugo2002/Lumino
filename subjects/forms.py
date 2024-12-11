@@ -1,4 +1,6 @@
-# from crispy_forms.layout import HTML, Field, Layout, Submit
+from crispy_forms.layout import HTML, Field, Layout, Submit
+from crispy_forms.helper import FormHelper
+from crispy_forms.bootstrap import FormActions
 from django import forms
 from django.core.exceptions import ValidationError
 
@@ -13,16 +15,17 @@ class AddLessonForm(forms.ModelForm):
     def __init__(self, subject, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.subject = subject
-        # self.helper.layout = Layout(
-        #     Field('title'),
-        #     Field('content'),
-        #     FormActions(
-        #         Submit('add', 'Add', css_class='btn btn-danger btn-lg'),
-        #         HTML(
-        #             '<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'
-        #         ),
-        #     ),
-        # )
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('title'),
+            Field('content'),
+            FormActions(
+                HTML(
+                    '<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'
+                ),
+                HTML('<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-plus-circle"></i> Add </button>'), css_class="mt-4 d-flex justify-content-between"
+            ),
+        )
     
 
     def save(self, *args, **kwargs):
@@ -36,8 +39,22 @@ class EditLessonForm(forms.ModelForm):
     class Meta:
         model = Lesson
         fields = (
-            'title',
+            'title', 
             'content',
+        )
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('title'),
+            Field('content'),
+            FormActions(
+                HTML(
+                    '<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'
+                ),
+                HTML('<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-check-circle"></i> Done </button>'), css_class="mt-4 d-flex justify-content-between"
+            ),
         )
 
 

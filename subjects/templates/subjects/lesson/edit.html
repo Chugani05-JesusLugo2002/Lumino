@@ -9,15 +9,7 @@
     <form action="" method="POST" novalidate class="needs-validation">
         {% csrf_token %}
         <div class="card shadow bg-light p-4">
-            {{ form|crispy }}
-        </div>
-        <div class="mt-4 d-flex justify-content-between">
-            <a href="{{ subject.get_absolute_url }}" class="btn btn-secondary btn-lg">
-                <i class="bi bi-arrow-left-circle"></i> Cancel
-            </a>
-            <button type="submit" class="btn btn-primary btn-lg">
-                <i class="bi bi-check-circle"></i> Done
-            </button>
+            {% crispy form %}
         </div>
     </form>
 </div>
