@@ -8,7 +8,7 @@ class LoginForm(forms.Form):
     username = forms.SlugField(max_length=64, required=True)
     password = forms.CharField(max_length=64, required=True, widget=forms.PasswordInput)
 
-    def get_credentials(self) -> tuple[str]:
+    def get_credentials(self):
         return self.cleaned_data['username'], self.cleaned_data['password']
 
 
