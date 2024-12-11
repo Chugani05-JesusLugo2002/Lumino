@@ -22,3 +22,17 @@ def student_label(student):
     avatar = student.profile.avatar
     name = student.username
     return dict(avatar=avatar, name=name)
+
+
+@register.inclusion_tag('subjects/components/student_mark.html')
+def student_mark(student, subject):
+    enroll = Enrollment.objects.get(student=student, subject=subject)
+    mark = enroll.mark
+    css_class = ''
+    if mark is not None:
+        css_class = (
+            'bg-danger-subtle text-danger-emphasis'
+            if mark < 5
+            else 'bg-success-subtle text-success-emphasis'
+        )
+    return dict(mark=mark, css_class=css_class)

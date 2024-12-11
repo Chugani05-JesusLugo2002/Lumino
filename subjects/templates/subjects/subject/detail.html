@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load student_mark from subject_extras %}
+
 {% block title %}Lumino | {{ subject.code }} {% endblock %}
 
 {% block main %}
@@ -9,7 +11,7 @@
       <h1>{{ subject }}</h1>
     </div>
     {% if user.profile.is_student %}
-      <p>Your mark is ##</p>
+      {% student_mark user subject %}
     {% else %}
       <div>
         <a href="{% url "subjects:add-lesson" subject.code %}" class="btn btn-success">Add lesson</a>
