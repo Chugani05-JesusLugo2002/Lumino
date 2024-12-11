@@ -91,15 +91,23 @@ def edit_marks(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRe
 
 @login_required
 def enroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
+    title = 'Enrollments'
     if request.method == 'POST':
-        if (form := EnrollmentForm(request.user, request.POST)).is_valid():
-            subjects = form.enrolls(request.user)
+        if (form := EnrollmentForm(request.user, enrolling=True, data=request.POST)).is_valid():
+            form.enrolls(request.user)
             return redirect('subjects:subject-list')
     else:
         form = EnrollmentForm(request.user)
-    return render(request, 'subjects/subject/enroll.html', dict(form=form))
+    return render(request, 'subjects/subject/enrollment.html', dict(form=form, title=title))
 
 
 @login_required
 def unenroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
-    pass
+    title = 'Unenrollments'
+    if request.method == 'POST':
+        if (form := EnrollmentForm(request.user, enrolling=False, data=request.POST)).is_valid():
+            form.unenrolls(request.user)
+            return redirect('subjects:subject-list')
+    else:
+        form = EnrollmentForm(request.user, enrolling=False)
+    return render(request, 'subjects/subject/enrollment.html', dict(form=form, title=title))

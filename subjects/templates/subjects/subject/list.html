@@ -8,7 +8,7 @@
     {% if user.profile.is_student %}
       <div>
         <a href="{% url "subjects:enroll-subjects" %}" class="btn btn-success">Enroll</a>
-        <a href="#" class="btn btn-outline-danger">Un-enroll</a>
+        <a href="{% url "subjects:unenroll-subjects" %}" class="btn btn-outline-danger">Un-enroll</a>
       </div>
     {% endif %}
   </div>

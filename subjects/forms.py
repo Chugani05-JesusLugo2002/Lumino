@@ -83,10 +83,11 @@ class EnrollmentForm(forms.Form):
         queryset=Subject.objects.all(), widget=forms.CheckboxSelectMultiple
     )
 
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, user, enrolling=True, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_show_labels = False
+        action_label = 'Enroll' if enrolling else 'Unenroll'
         self.helper.layout = Layout(
             Field('subjects'),
             FormActions(
@@ -94,17 +95,26 @@ class EnrollmentForm(forms.Form):
                     '<a class="btn btn-danger btn-lg" href="{% url "subjects:subject-list" %}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'
                 ),
                 HTML(
-                    '<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-check-circle"></i> Enroll </button>'
+                    f'<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-check-circle"></i> {action_label} </button>'
                 ),
-                css_class='mt-4 d-flex justify-content-between',
+                css_class='mt-4 d-flex justify-content',
             ),
         )
-        self.fields['subjects'].queryset = self.fields['subjects'].queryset.exclude(
-            pk__in=user.student_subjects.all()
-        )
+        if enrolling:
+            self.fields['subjects'].queryset = self.fields['subjects'].queryset.exclude(
+                pk__in=user.student_subjects.all()
+            )
+        else:
+            self.fields['subjects'].queryset = self.fields['subjects'].queryset.filter(
+                pk__in=user.student_subjects.all()
+            )
 
     def enrolls(self, user):
         subjects = self.cleaned_data['subjects']
         for subject in subjects:
             user.student_subjects.add(subject)
-        return subjects
+
+    def unenrolls(self, user):
+        subjects = self.cleaned_data['subjects']
+        for subject in subjects:
+            user.student_subjects.remove(subject)
