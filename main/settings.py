@@ -45,18 +45,18 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'markdownify.apps.MarkdownifyConfig',
-    'sorl.thumbnail'
+    'sorl.thumbnail',
 ]
 
 MARKDOWNIFY = {
-    "default": {
-        "WHITELIST_TAGS": [
-            'a', 
-            'p', 
-            'h1', 
-            'h2', 
-            'h3', 
-            'h4', 
+    'default': {
+        'WHITELIST_TAGS': [
+            'a',
+            'p',
+            'h1',
+            'h2',
+            'h3',
+            'h4',
             'h5',
             'abbr',
             'acronym',
@@ -68,8 +68,8 @@ MARKDOWNIFY = {
             'ol',
             'p',
             'strong',
-            'ul'
-            ]
+            'ul',
+        ]
     }
 }
 

@@ -17,7 +17,7 @@ def user_login(request: HttpRequest) -> HttpResponse:
 
 def user_logout(request: HttpRequest) -> HttpResponse:
     logout(request)
-    return redirect('login')
+    return redirect('home')
 
 
 def user_signup(request: HttpRequest) -> HttpResponse:
