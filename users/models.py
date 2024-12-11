@@ -1,8 +1,6 @@
 from django.conf import settings
 from django.db import models
 
-from subjects.models import Enrollment
-
 
 class Profile(models.Model):
     class Role(models.TextChoices):
@@ -22,7 +20,7 @@ class Profile(models.Model):
 
     def __str__(self) -> str:
         return f'{self.role}: {self.user}'
-    
+
     def get_subject_list(self):
         if self.is_student:
             return self.user.student_subjects.all()

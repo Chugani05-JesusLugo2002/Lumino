@@ -8,8 +8,8 @@ from .forms import EditProfileForm
 
 @login_required
 def user_detail(request: HttpRequest, username: str) -> HttpResponse:
-    consumer = User.objects.get(username=username)
-    return render(request, 'users/user_detail.html', dict(consumer=consumer))
+    target_user = User.objects.get(username=username)
+    return render(request, 'users/user_detail.html', dict(target_user=target_user))
 
 
 @login_required

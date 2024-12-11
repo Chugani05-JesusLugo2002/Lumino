@@ -7,7 +7,7 @@
     <h1 class="my-3">Subjects</h1>
     {% if user.profile.is_student %}
       <div>
-        <a href="#" class="btn btn-success">Enroll</a>
+        <a href="{% url "subjects:enroll-subjects" %}" class="btn btn-success">Enroll</a>
         <a href="#" class="btn btn-outline-danger">Un-enroll</a>
       </div>
     {% endif %}

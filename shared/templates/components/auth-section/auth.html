@@ -4,7 +4,7 @@
         <span style="font-size: 16px">{{ user }}</span>
     </button>
     <ul class="dropdown-menu">
-        <li><a href="#" class="dropdown-item"><i class="bi bi-person-fill"></i> My profile</a></li>
+        <li><a href="{% url "user-detail" user %}" class="dropdown-item"><i class="bi bi-person-fill"></i> My profile</a></li>
         <li><a href="#" class="dropdown-item"><i class="bi bi-moon-fill"></i> Change theme</a></li>
         <li><a href="{% url "logout" %}" class="dropdown-item"><i class="bi bi-door-open-fill"></i> Logout</a></li>
     </ul>

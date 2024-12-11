@@ -35,20 +35,20 @@ class Lesson(models.Model):
     def get_absolute_url(self):
         return reverse(
             'subjects:lesson-detail',
-            kwargs={'subject_code': self.subject.code, 'lesson_pk': self.pk}
+            kwargs={'subject_code': self.subject.code, 'lesson_pk': self.pk},
         )
-    
+
     def get_edit_url(self):
         return reverse(
-            'subjects:edit-lesson',
-             kwargs={'subject_code': self.subject.code, 'lesson_pk': self.pk}
+            'subjects:edit-lesson', kwargs={'subject_code': self.subject.code, 'lesson_pk': self.pk}
         )
-    
+
     def get_delete_url(self):
         return reverse(
             'subjects:delete-lesson',
-             kwargs={'subject_code': self.subject.code, 'lesson_pk': self.pk}
+            kwargs={'subject_code': self.subject.code, 'lesson_pk': self.pk},
         )
+
 
 class Enrollment(models.Model):
     student = models.ForeignKey(
@@ -64,4 +64,4 @@ class Enrollment(models.Model):
         return f'{self.student}, enrolled at {self.enrolled_at} in {self.subject}'
 
     def get_mark_value(self) -> str:
-        return self.mark if self.mark != None else ''
+        return self.mark if self.mark is not None else ''

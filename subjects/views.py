@@ -3,7 +3,7 @@ from django.forms import modelformset_factory
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect, render
 
-from .forms import AddLessonForm, EditLessonForm, EditMarkForm
+from .forms import AddLessonForm, EditLessonForm, EditMarkForm, EnrollmentForm
 from .models import Enrollment, Lesson, Subject
 
 
@@ -55,7 +55,9 @@ def edit_lesson(
 
 
 @login_required
-def delete_lesson(request: HttpRequest, subject_code: str, lesson_pk: int) -> HttpResponse | HttpResponseForbidden:
+def delete_lesson(
+    request: HttpRequest, subject_code: str, lesson_pk: int
+) -> HttpResponse | HttpResponseForbidden:
     lesson = Lesson.objects.get(pk=lesson_pk)
     subject = lesson.subject
     lesson.delete()
@@ -89,7 +91,13 @@ def edit_marks(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRe
 
 @login_required
 def enroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
-    pass
+    if request.method == 'POST':
+        if (form := EnrollmentForm(request.user, request.POST)).is_valid():
+            subjects = form.enrolls(request.user)
+            return redirect('subjects:subject-list')
+    else:
+        form = EnrollmentForm(request.user)
+    return render(request, 'subjects/subject/enroll.html', dict(form=form))
 
 
 @login_required
