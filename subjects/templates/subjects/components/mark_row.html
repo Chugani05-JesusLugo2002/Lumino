@@ -1,4 +1,6 @@
+{% load student_label from subject_extras %}
+
 <tr class="{{ css_class }}">
-    <td class="col-2">{{ student|title }}</td>    
+    <td class="col-2">{% student_label student %}</td>    
     <td>{{ mark }}</td>
 </tr>

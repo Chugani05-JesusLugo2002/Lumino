@@ -14,3 +14,9 @@ def mark_row(enroll: Enrollment):
     else:
         mark = '-'
     return dict(student=student, mark=mark, css_class=css_class)
+
+@register.inclusion_tag('subjects/components/student_label.html')
+def student_label(student):
+    avatar = student.profile.avatar
+    name = student.username
+    return dict(avatar=avatar, name=name)
