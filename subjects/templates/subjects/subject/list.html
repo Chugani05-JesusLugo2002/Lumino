@@ -3,8 +3,8 @@
 {% block title %}Lumino | Subject list{% endblock %}
 
 {% block main %}
-  <div class="d-flex justify-content-between align-items-center">
-    <h1 class="my-3">Subjects</h1>
+  <div class="my-3 d-flex justify-content-between align-items-center">
+    <h1>Subjects</h1>
     {% if user.profile.is_student %}
       <div>
         <a href="{% url "subjects:enroll-subjects" %}" class="btn btn-success">Enroll</a>

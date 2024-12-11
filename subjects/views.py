@@ -95,6 +95,7 @@ def enroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbidde
     if request.method == 'POST':
         if (form := EnrollmentForm(request.user, enrolling=True, data=request.POST)).is_valid():
             form.enrolls(request.user)
+
             return redirect('subjects:subject-list')
     else:
         form = EnrollmentForm(request.user)

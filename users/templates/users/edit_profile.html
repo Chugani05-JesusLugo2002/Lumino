@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block main %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Editing my Profile</h1>
+
+    <form action="" method="POST" novalidate class="needs-validation">
+        {% csrf_token %}
+        <div class="card shadow bg-light p-4">
+            {% crispy form %}
+        </div>
+    </form>
+</div>
+{% endblock main %}

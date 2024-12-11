@@ -3,9 +3,18 @@
 {% load crispy_forms_tags %}
 
 {% block main %}
-  
-  <h1>{{ title }}</h1>
 
-  {% crispy form %}
- 
+  <div class="my-3 d-flex align-items-center">
+    <a href="{% url "subjects:subject-list" %}" class="h2 mx-3" data-bs-toggle="tooltip" data-bs-title="Back to subject list"><i class="bi bi-arrow-left-circle-fill"></i></a> 
+    <h1 class="">{{ title }}</h1>
+  </div>
+
+  {% if form.fields.subjects.queryset|length > 0 %}
+    {% crispy form %}
+  {% else %}
+    <div class="alert alert-warning" role="alert">
+      <i class="bi bi-emoji-angry"></i> You can't do anything right now! 
+    </div>
+  {% endif %}
+
 {% endblock main %}
