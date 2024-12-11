@@ -11,7 +11,7 @@
     {{ formset.management_form}}
     {% for enroll, form in enrolls_and_formset %}
         <div style="display: flex;">
-            Student {{ enroll.student }} | {% crispy form %}
+            Student {{ enroll.student }} | {{ form }}
         </div>
     {% endfor %}
     <input type="submit" value="Save marks">

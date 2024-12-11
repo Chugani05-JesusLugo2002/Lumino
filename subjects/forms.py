@@ -1,6 +1,6 @@
-from crispy_forms.layout import HTML, Field, Layout
-from crispy_forms.helper import FormHelper
 from crispy_forms.bootstrap import FormActions
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import HTML, Field, Layout
 from django import forms
 from django.core.exceptions import ValidationError
 
@@ -20,12 +20,15 @@ class AddLessonForm(forms.ModelForm):
             Field('title'),
             Field('content'),
             FormActions(
-                HTML('<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'),
-                HTML('<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-plus-circle"></i> Add </button>'), 
-                css_class="mt-4 d-flex justify-content-between"
+                HTML(
+                    '<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'
+                ),
+                HTML(
+                    '<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-plus-circle"></i> Add </button>'
+                ),
+                css_class='mt-4 d-flex justify-content-between',
             ),
         )
-    
 
     def save(self, *args, **kwargs):
         lesson = super().save(commit=False)
@@ -38,10 +41,10 @@ class EditLessonForm(forms.ModelForm):
     class Meta:
         model = Lesson
         fields = (
-            'title', 
+            'title',
             'content',
         )
-        
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -49,9 +52,13 @@ class EditLessonForm(forms.ModelForm):
             Field('title'),
             Field('content'),
             FormActions(
-                HTML('<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'),
-                HTML('<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-check-circle"></i> Done </button>'),
-                css_class="mt-4 d-flex justify-content-between"
+                HTML(
+                    '<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'
+                ),
+                HTML(
+                    '<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-check-circle"></i> Done </button>'
+                ),
+                css_class='mt-4 d-flex justify-content-between',
             ),
         )
 
@@ -65,10 +72,7 @@ class EditMarkForm(forms.ModelForm):
     def clean_mark(self):
         mark = self.cleaned_data['mark']
         if mark:
-            try:
-                mark = int(mark)
-            except ValueError:
-                raise ValidationError('Mark must be a number or a blank space.')
+            mark = int(mark)
             if not 0 <= mark <= 10:
                 raise ValidationError('Mark is not between the allowed range (0-10)!')
         return mark
