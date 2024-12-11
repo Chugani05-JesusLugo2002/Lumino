@@ -1,4 +1,4 @@
-from crispy_forms.layout import HTML, Field, Layout, Submit
+from crispy_forms.layout import HTML, Field, Layout
 from crispy_forms.helper import FormHelper
 from crispy_forms.bootstrap import FormActions
 from django import forms
@@ -20,10 +20,9 @@ class AddLessonForm(forms.ModelForm):
             Field('title'),
             Field('content'),
             FormActions(
-                HTML(
-                    '<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'
-                ),
-                HTML('<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-plus-circle"></i> Add </button>'), css_class="mt-4 d-flex justify-content-between"
+                HTML('<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'),
+                HTML('<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-plus-circle"></i> Add </button>'), 
+                css_class="mt-4 d-flex justify-content-between"
             ),
         )
     
@@ -50,10 +49,9 @@ class EditLessonForm(forms.ModelForm):
             Field('title'),
             Field('content'),
             FormActions(
-                HTML(
-                    '<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'
-                ),
-                HTML('<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-check-circle"></i> Done </button>'), css_class="mt-4 d-flex justify-content-between"
+                HTML('<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'),
+                HTML('<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-check-circle"></i> Done </button>'),
+                css_class="mt-4 d-flex justify-content-between"
             ),
         )
 
