@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load student_mark from subject_extras %}
+{% load modal from shared_extras %}
 
 {% block title %}Lumino | {{ subject.code }} {% endblock %}
 
@@ -27,8 +28,10 @@
         <a href="{{ lesson.get_absolute_url }}" class="list-group-item btn btn-light col-12 text-start">
           <i class="bi bi-book mx-2"></i> {{ lesson }}
         </a>
-        <a href="{{ lesson.get_edit_url }}" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-title="Edit lesson"><i class="bi bi-pen-fill"></i></a>
-        <a href="{{ lesson.get_delete_url }}" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-title="Delete lesson"><i class="bi bi-trash-fill"></i></a>
+        {% if not user.profile.is_student %}
+          <a href="{{ lesson.get_edit_url }}" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-title="Edit lesson"><i class="bi bi-pen-fill"></i></a>
+          {% modal '<i class="bi bi-trash-fill"></i>' 'Delete lesson' css_class='btn btn-danger' modal_button_label='Delete' %}
+        {% endif %}
       </div>
 
     </div>

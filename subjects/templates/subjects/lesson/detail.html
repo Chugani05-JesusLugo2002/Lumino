@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
-{% load markdownify %}  
+{% load markdownify %}
+{% load modal from shared_extras %}  
 
 {% block title %}Lumino | {{ lesson }}{% endblock %}
 
@@ -14,7 +15,7 @@
     {% if not user.profile.is_student %}
       <div>
         <a href="{% url "subjects:edit-lesson" subject.code lesson.pk %}" class="btn btn-primary">Edit</a>
-        <a href="" class="btn btn-outline-danger">Delete</a>
+        {% modal 'Delete' 'Delete lesson' css_class="btn btn-outline-danger" %}
       </div>
     {% endif %}
 </div>
