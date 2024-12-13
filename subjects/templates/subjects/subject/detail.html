@@ -14,7 +14,7 @@
     {% if user.profile.is_student %}
       {% student_mark user subject %}
     {% else %}
-      {% include "./includes/teacher_lesson_actions.html" %}
+      {% include "./includes/teacher_actions.html" %}
     {% endif %}
   </section>
 
