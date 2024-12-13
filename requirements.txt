@@ -1,5 +1,6 @@
 # Test requirements
 pytest-django
+pytest-dependency==0.6.0
 model-bakery
 faker
 # Project requirements
@@ -8,5 +9,5 @@ pillow
 ipython
 crispy-bootstrap5==2024.10
 django-browser-reload==1.17.0
-django-markdownify
-sorl-thumbnail
+django-markdownify==0.9.5
+sorl-thumbnail==12.11.0

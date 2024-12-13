@@ -25,6 +25,7 @@ alias m := migrate
 migrate: check-venv
     ./manage.py migrate
 
+alias c := check
 # Check if Django project is correct
 check: check-venv
     ./manage.py check
