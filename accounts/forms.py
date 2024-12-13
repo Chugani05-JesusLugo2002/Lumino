@@ -3,7 +3,6 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import HTML, Div, Layout
 from django import forms
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 
 from users.models import Profile
 
@@ -27,12 +26,6 @@ class LoginForm(forms.Form):
                 HTML('<button type="submit" class="btn btn-primary w-100 mt-4">Login</button>'),
             ),
         )
-
-    def clean_username(self):
-        data = self.cleaned_data['username']
-        if len(data) <= 0:
-            return ValidationError('¿No tienes nombre?')
-        return data
 
 
 class SignupForm(forms.ModelForm):
