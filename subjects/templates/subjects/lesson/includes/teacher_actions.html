@@ -1,0 +1,6 @@
+{% load modal from shared_extras %}  
+
+<div>
+    <a href="{% url "subjects:edit-lesson" subject.code lesson.pk %}" class="btn btn-primary">Edit</a>
+    {% modal 'Delete' 'Delete lesson' css_class="btn btn-outline-danger" %}
+</div>
