@@ -8,7 +8,11 @@
     <div class="card shadow-lg border-0" style="max-width: 600px; width: 100%;">
       <div class="card-body p-5 rounded bg-light">
         <h3 class="card-title text-center mb-4">Signup</h3>
-          {% crispy form %}
+        <form method="post">
+          {% csrf_token %}
+          {{ form|crispy }}
+          <button type="submit" class="btn btn-primary w-100 mt-4">Signup</button>
+        </form>
         <p class="text-center mt-4">
           Already have an account? 
           <a href="{% url "login" %}" class="link-primary text-decoration-none">Login here!</a>
@@ -17,4 +21,4 @@
     </div>
   </div>
 </div>
-{% endblock main %}
+{% endblock %}
