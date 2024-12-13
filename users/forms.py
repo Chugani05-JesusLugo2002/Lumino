@@ -22,7 +22,7 @@ class EditProfileForm(forms.ModelForm):
             Field('bio'),
             FormActions(
                 HTML(
-                    '<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'
+                    '<a class="btn btn-danger btn-lg" href="{% url "user-detail" user %}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'
                 ),
                 HTML(
                     '<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-check-circle"></i> Done </button>'

@@ -13,16 +13,17 @@ def user_detail(request: HttpRequest, username: str) -> HttpResponse:
 
 
 @login_required
-def edit_profile(request: HttpRequest, username: str) -> HttpResponse:
+def edit_profile(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
-        if (form := EditProfileForm(request.POST, request.FILES)).is_valid():
+        if (form := EditProfileForm(request.POST, request.FILES, instance=request.user.profile)).is_valid():
             profile = form.save(commit=False)
             profile.user = request.user
             profile.save()
-            return redirect('users:user-detail', username)
+            return redirect('home')
     else:
-        form = EditProfileForm()
-    return render(request, 'user/edit_profile.html', dict(form=form))
+        form = EditProfileForm(instance=request.user.profile)
+    return render(request, 'users/edit_profile.html', dict(form=form))
+    # TODO: arreglar redirect con 'users:user-detail'
 
 
 @login_required
