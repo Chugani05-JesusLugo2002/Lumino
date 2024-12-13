@@ -16,6 +16,7 @@ class AddLessonForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.subject = subject
         self.helper = FormHelper()
+        self.helper.form_class = 'needs-validation card shadow bg-light p-4'
         self.helper.layout = Layout(
             Field('title'),
             Field('content'),
