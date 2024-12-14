@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 
 from users.models import Profile
 
@@ -19,6 +20,24 @@ class SignupForm(forms.ModelForm):
         widgets = dict(password=forms.PasswordInput)
         help_texts = dict(username=None)
 
+    def make_fields_required(self):
+        for field in self.fields:
+            self.fields[field].required = True
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.make_fields_required()
+
+    def clean(self):
+       User = get_user_model()
+       email = self.cleaned_data.get('email')
+       username = self.cleaned_data.get('username')
+       if User.objects.filter(email=email).exists():
+            raise ValidationError("An error, email exists!")
+       if User.objects.filter(username=username).exists():
+            raise ValidationError("An error, username exists!") 
+       return self.cleaned_data
+    
     def save(self, *args, **kwargs):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password'])
