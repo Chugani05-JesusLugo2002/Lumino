@@ -15,6 +15,8 @@ class LoginForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.helper.attrs = dict(novalidate=True)
+        self.helper.form_class = 'card-body p-5 shadow rounded bg-light overflow-auto'
         self.helper.layout = Layout(
             HTML('<h3 class="card-title text-center mb-4">Login</h3>'),
             FloatingField('username'),
@@ -41,6 +43,7 @@ class SignupForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.make_fields_required()
+        
 
     def clean(self):
        User = get_user_model()
