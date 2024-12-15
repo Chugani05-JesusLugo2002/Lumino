@@ -43,6 +43,23 @@ class SignupForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.make_fields_required()
+        self.helper = FormHelper()
+        self.helper.attrs = dict(novalidate=True)
+        self.helper.form_class = 'card-body px-5 py-4 rounded bg-light'
+        self.helper.layout = Layout(
+            HTML('<h3 class="card-title text-center mb-4">Signup</h3>'),
+            FloatingField('first_name'),
+            FloatingField('last_name'),
+            FloatingField('username'),
+            FloatingField('email'),
+            FloatingField('password'),
+            HTML('<p class="text-secondary">Fields with * are required.</p>'),
+            Submit('signup', 'Signup', css_class='btn btn-primary w-100'),
+            HTML('''<p class="text-center mt-4">
+                Already have an account? 
+                <a href="{% url "login" %}" class="link-primary text-decoration-none">Login here!</a>
+            </p>'''),
+        )
         
 
     def clean(self):
