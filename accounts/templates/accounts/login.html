@@ -6,15 +6,7 @@
 <div class="d-flex justify-content-center align-items-center min-vh-100">
   <div class="card shadow-lg border-0" style="max-width: 400px; width: 100%;">
     <div class="card-body p-5 shadow rounded bg-light overflow-auto">
-      <h3 class="card-title text-center mb-4">Login</h3>
-      <form method="post">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button type="submit" class="btn btn-primary btn-block w-100 mt-3">Login</button>
-      </form>
-      <p class="text-center mt-4">
-        No account? <a href="{% url "signup" %}" class="link-primary text-decoration-none">Create one!</a>
-      </p>
+      {% crispy form %}
     </div>
   </div>
 </div>
