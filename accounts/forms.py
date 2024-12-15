@@ -21,7 +21,8 @@ class LoginForm(forms.Form):
             HTML('<h3 class="card-title text-center mb-4">Login</h3>'),
             FloatingField('username'),
             FloatingField('password'),
-            Submit('login', 'Login', css_class="btn btn-primary btn-block w-100 mt-3"),
+            HTML('<p class="text-secondary">Fields with * are required.</p>'),
+            Submit('login', 'Login', css_class="btn btn-primary btn-block w-100"),
             HTML('<p class="text-center mt-4">No account? <a href="{% url "signup" %}" class="link-primary text-decoration-none">Create one!</a></p>')
         )
 
