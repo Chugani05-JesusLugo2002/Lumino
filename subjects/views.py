@@ -9,7 +9,7 @@ from .models import Enrollment, Lesson, Subject
 
 @login_required
 def subject_list(request: HttpRequest) -> HttpResponse:
-    subjects = request.user.profile.get_subject_list()
+    subjects = request.user.profile.get_subjects()
     return render(request, 'subjects/subject/list.html', dict(subjects=subjects))
 
 

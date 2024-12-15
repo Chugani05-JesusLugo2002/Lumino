@@ -21,7 +21,7 @@ class Profile(models.Model):
     def __str__(self) -> str:
         return f'{self.role}: {self.user}'
 
-    def get_subject_list(self):
+    def get_subjects(self):
         if self.is_student:
             return self.user.student_subjects.all()
         return self.user.teacher_subjects.all()
