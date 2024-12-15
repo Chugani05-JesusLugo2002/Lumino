@@ -16,7 +16,7 @@ class Profile(models.Model):
 
     @property
     def is_student(self) -> bool:
-        return True if self.role == Profile.Role.STUDENT else False
+        return self.role == Profile.Role.STUDENT
 
     def __str__(self) -> str:
         return f'{self.role}: {self.user}'
