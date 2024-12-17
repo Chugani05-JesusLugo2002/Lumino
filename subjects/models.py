@@ -7,7 +7,7 @@ class Subject(models.Model):
     code = models.CharField(unique=True, max_length=3)
     name = models.CharField(max_length=255)
     teacher = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='teacher_subjects'
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='teacher_subjects'
     )
     students = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
@@ -16,7 +16,7 @@ class Subject(models.Model):
     )
 
     def __str__(self) -> str:
-        return f'{self.code}'
+        return f'{self.code} - {self.name}'
 
     def get_absolute_url(self):
         return reverse('subjects:subject-detail', kwargs={'subject_code': self.code})

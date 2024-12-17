@@ -116,3 +116,8 @@ def unenroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbid
     else:
         form = EnrollmentForm(request.user, enrolling=False)
     return render(request, 'subjects/subject/enrollment.html', dict(form=form, title=title))
+
+
+@login_required
+def request_certificate(request: HttpRequest) -> HttpResponse:
+    pass

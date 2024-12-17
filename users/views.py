@@ -27,10 +27,5 @@ def edit_profile(request: HttpRequest) -> HttpResponse:
 
 
 @login_required
-def request_certificate(request: HttpRequest) -> HttpResponse:
-    pass
-
-
-@login_required
 def leave(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
     return redirect('home')
