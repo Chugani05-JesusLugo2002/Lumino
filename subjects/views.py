@@ -3,6 +3,9 @@ from django.forms import modelformset_factory
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect, render
 
+from shared.utils import assert_role
+from users.models import Profile
+
 from .forms import AddLessonForm, EditLessonForm, EditMarkForm, EnrollmentForm
 from .models import Enrollment, Lesson, Subject
 
@@ -27,6 +30,7 @@ def lesson_detail(request: HttpRequest, subject_code: str, lesson_pk: int) -> Ht
     return render(request, 'subjects/lesson/detail.html', dict(subject=subject, lesson=lesson))
 
 
+@assert_role(Profile.Role.TEACHER)
 @login_required
 def add_lesson(request: HttpRequest, subject_code: str) -> HttpResponse | HttpResponseForbidden:
     subject = Subject.objects.get(code=subject_code)
