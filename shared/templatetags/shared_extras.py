@@ -1,14 +1,15 @@
 from uuid import uuid4
 
 from django import template
+from django.urls import reverse
 
 register = template.Library()
 
 
 @register.inclusion_tag('components/modal.html')
 def modal(
-    btn_label: str = 'Action',
-    url: str = '',
+    btn_label: str,
+    url: str,
     *url_args,
     title: str = 'Action',
     body: str = 'Are you sure?',
@@ -16,6 +17,7 @@ def modal(
     modal_btn_label: str = 'Action',
 ):
     modal_id = uuid4()
+    url = reverse(url, args=url_args)
     return dict(
         modal_id=modal_id,
         title=title,

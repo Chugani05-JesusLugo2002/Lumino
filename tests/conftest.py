@@ -1,6 +1,10 @@
+import io
+
 import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
 from faker import Faker
 from model_bakery import baker
+from PIL import Image
 
 from users.models import Profile
 
@@ -87,3 +91,15 @@ def another_teacher(django_user_model):
     user = baker.make(django_user_model, _fill_optional=True)
     baker.make(Profile, user=user, role=Profile.Role.TEACHER, _fill_optional=True)
     return user
+
+
+@pytest.fixture
+def image():
+    img = Image.new('RGBA', size=(200, 200), color='white')
+    buffer = io.BytesIO()
+    img.save(buffer, format='PNG')
+    return SimpleUploadedFile(
+        name='test_image.png',
+        content=buffer.getvalue(),
+        content_type='image/png',
+    )

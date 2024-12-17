@@ -69,6 +69,7 @@ check-venv: create-venv
         exit 1
     fi
 
+alias i := install-reqs
 # Install project requirements
 install-reqs: check-venv
     {{ pip-cmd }} install -r requirements.txt
@@ -111,6 +112,10 @@ reset-db: && create-su
     ./manage.py migrate
     echo
 
+# Launch worker for Redis Queue (RQ)
+rq: check-venv redis
+    ./manage.py rqworker
+
 # ==============================================================================
 # MISC RECIPES
 # ==============================================================================
@@ -126,3 +131,15 @@ enable-vscode-pytest:
       "python.testing.pytestEnabled": true
     }
     EOF
+
+# Start redis server
+[private]
+redis:
+    #!/usr/bin/env bash
+    if [[ $(grep -i redis $(find . -name settings.py)) ]]; then
+        if   [[ $OSTYPE == "linux-gnu"* ]]; then
+            pgrep -x redis &> /dev/null || sudo service redis start
+        elif [[ $OSTYPE == "darwin"* ]]; then
+            pgrep -x Redis &> /dev/null || (open /Applications/Redis.app && sleep 2)
+        fi
+    fi

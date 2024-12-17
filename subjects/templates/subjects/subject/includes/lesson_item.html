@@ -7,7 +7,7 @@
       </a>
       {% if not user.profile.is_student %}
         <a href="{{ lesson.get_edit_url }}" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-title="Edit lesson"><i class="bi bi-pen-fill"></i></a>
-        {% modal  %}
+        {% modal '<i class="bi bi-trash-fill"></i>' 'subjects:delete-lesson' subject.code lesson.pk title='Delete lesson' css_class='btn btn-danger' modal_btn_label='Delete' %}
       {% endif %}
     </div>
 </div>

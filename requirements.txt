@@ -11,3 +11,6 @@ crispy-bootstrap5==2024.10
 django-browser-reload==1.17.0
 django-markdownify==0.9.5
 sorl-thumbnail==12.11.0
+weasyprint==63.1
+django-rq==3.0.0
+prettyconf==2.2.1

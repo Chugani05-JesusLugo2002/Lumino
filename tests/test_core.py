@@ -1,5 +1,6 @@
 import pytest
 from django.conf import settings
+from pytest_django.asserts import assertRedirects
 
 
 @pytest.mark.django_db
@@ -62,3 +63,35 @@ def test_models_are_available_on_admin(admin_client):
         url = f'/admin/{url_model_path}/'
         response = admin_client.get(url)
         assert response.status_code == 200, f'El modelo <{model}> no está habilitado en el admin.'
+
+
+# ==============================================================================
+# Test urls with login required.
+# ==============================================================================
+
+AUTH_URLS = [
+    # SUBJECTS
+    '/subjects/',
+    '/subjects/AAA/',
+    '/subjects/AAA/lessons/add/',
+    '/subjects/AAA/lessons/1/',
+    '/subjects/AAA/lessons/17/edit/',
+    '/subjects/AAA/lessons/17/delete/',
+    '/subjects/AAA/marks/',
+    '/subjects/AAA/marks/edit/',
+    '/subjects/enroll/',
+    '/subjects/unenroll/',
+    # USERS
+    '/users/guido/',
+    '/user/edit/',
+    '/user/leave/',
+]
+
+testdata = [(url, f'/login/?next={url}') for url in AUTH_URLS]
+
+
+@pytest.mark.parametrize('auth_url, redirect_url', testdata)
+@pytest.mark.django_db
+def test_login_required(client, auth_url, redirect_url):
+    response = client.get(auth_url, follow=True)
+    assertRedirects(response, redirect_url)

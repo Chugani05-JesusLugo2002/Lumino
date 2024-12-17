@@ -2,5 +2,5 @@
 
 <div>
     <a href="{% url "subjects:edit-lesson" subject.code lesson.pk %}" class="btn btn-primary">Edit</a>
-    {% modal 'Delete' 'Delete lesson' css_class="btn btn-outline-danger" %}
+    {% modal 'Delete' 'subjects:delete-lesson' lesson.subject.code lesson.pk title='Delete lesson' css_class='btn btn-danger' modal_btn_label='Delete' %}
 </div>
