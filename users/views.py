@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
@@ -19,11 +20,11 @@ def edit_profile(request: HttpRequest) -> HttpResponse:
             profile = form.save(commit=False)
             profile.user = request.user
             profile.save()
-            return redirect('home')
+            messages.add_message(request, messages.SUCCESS, 'User profile has been successfully saved.')
+            return redirect('user-detail', profile.user)
     else:
         form = EditProfileForm(instance=request.user.profile)
-    return render(request, 'users/edit_profile.html', dict(form=form))
-    # TODO: arreglar redirect con 'users:user-detail'
+    return render(request, 'users/edit_profile.html', dict(form=form, messages=messages.get_messages(request)))
 
 
 @login_required

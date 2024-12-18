@@ -5,14 +5,6 @@
 {% block title %}Lumino | Subject list{% endblock %}
 
 {% block main %}
-  {% if messages %}
-  <ul class="messages">
-      {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-  </ul>
-  {% endif %}
-
   <section class="my-3 d-flex justify-content-between align-items-center">
     <h1>Subjects</h1>
     {% if user.profile.is_student %}

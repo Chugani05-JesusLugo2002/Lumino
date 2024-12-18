@@ -3,9 +3,6 @@ from django.forms import modelformset_factory
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect, render
 
-from shared.utils import assert_role
-from users.models import Profile
-
 from .forms import AddLessonForm, EditLessonForm, EditMarkForm, EnrollmentForm
 from .models import Enrollment, Lesson, Subject
 
@@ -98,7 +95,6 @@ def enroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbidde
     if request.method == 'POST':
         if (form := EnrollmentForm(request.user, enrolling=True, data=request.POST)).is_valid():
             form.enrolls(request.user)
-
             return redirect('subjects:subject-list')
     else:
         form = EnrollmentForm(request.user)
