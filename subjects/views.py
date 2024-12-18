@@ -30,7 +30,6 @@ def lesson_detail(request: HttpRequest, subject_code: str, lesson_pk: int) -> Ht
     return render(request, 'subjects/lesson/detail.html', dict(subject=subject, lesson=lesson))
 
 
-@assert_role(Profile.Role.TEACHER)
 @login_required
 def add_lesson(request: HttpRequest, subject_code: str) -> HttpResponse | HttpResponseForbidden:
     subject = Subject.objects.get(code=subject_code)

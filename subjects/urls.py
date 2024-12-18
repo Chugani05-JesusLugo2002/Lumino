@@ -19,5 +19,5 @@ urlpatterns = [
         name='delete-lesson',
     ),
     path('<str:subject_code>/marks/', views.mark_list, name='mark-list'),
-    path('<str:subject_code>/marks/edit', views.edit_marks, name='edit-marks'),
+    path('<str:subject_code>/marks/edit/', views.edit_marks, name='edit-marks'),
 ]
