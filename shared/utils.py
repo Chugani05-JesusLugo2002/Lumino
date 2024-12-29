@@ -1,5 +1,6 @@
 from django.http import HttpResponseForbidden
 
+from subjects.models import Subject
 
 def assert_role(role):
     def decorator(func):
@@ -12,3 +13,10 @@ def assert_role(role):
         return wrapper
 
     return decorator
+
+def assert_enrollment(func):
+    def wrapper(*args, **kwargs):
+        subject = Subject.objects.get(code=kwargs['subject_code'])
+        
+        return func(*args, **kwargs)
+    return wrapper

@@ -28,8 +28,8 @@ def edit_profile(request: HttpRequest) -> HttpResponse:
         form = EditProfileForm(instance=request.user.profile)
     return render(request, 'users/edit_profile.html', dict(form=form, messages=messages.get_messages(request)))
 
-@assert_role(Profile.Role.STUDENT)
 @login_required
+@assert_role(Profile.Role.STUDENT)
 def leave(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
     request.user.delete()
     messages.add_message(request, messages.SUCCESS, 'Good bye! Hope to see you soon.')

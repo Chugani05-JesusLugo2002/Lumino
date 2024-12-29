@@ -23,5 +23,5 @@ class Profile(models.Model):
 
     def get_subjects(self):
         if self.is_student:
-            return self.user.student_subjects.all()
+            return self.user.enrolled.all()
         return self.user.teacher_subjects.all()

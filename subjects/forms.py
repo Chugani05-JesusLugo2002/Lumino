@@ -103,19 +103,19 @@ class EnrollmentForm(forms.Form):
         )
         if enrolling:
             self.fields['subjects'].queryset = self.fields['subjects'].queryset.exclude(
-                pk__in=user.student_subjects.all()
+                pk__in=user.enrolled.all()
             )
         else:
             self.fields['subjects'].queryset = self.fields['subjects'].queryset.filter(
-                pk__in=user.student_subjects.all()
+                pk__in=user.enrolled.all()
             )
 
     def enrolls(self, user):
         subjects = self.cleaned_data['subjects']
         for subject in subjects:
-            user.student_subjects.add(subject)
+            user.enrolled.add(subject)
 
     def unenrolls(self, user):
         subjects = self.cleaned_data['subjects']
         for subject in subjects:
-            user.student_subjects.remove(subject)
+            user.enrolled.remove(subject)

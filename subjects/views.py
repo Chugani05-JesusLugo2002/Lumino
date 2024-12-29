@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
@@ -5,6 +6,8 @@ from django.shortcuts import redirect, render
 
 from .forms import AddLessonForm, EditLessonForm, EditMarkForm, EnrollmentForm
 from .models import Enrollment, Lesson, Subject
+from users.models import Profile
+from shared.utils import assert_role, assert_enrollment
 
 
 @login_required
@@ -14,6 +17,7 @@ def subject_list(request: HttpRequest) -> HttpResponse:
 
 
 @login_required
+@assert_enrollment
 def subject_detail(request: HttpRequest, subject_code: str) -> HttpResponse:
     subject = Subject.objects.get(code=subject_code)
     lessons = subject.lessons.all()
@@ -26,14 +30,15 @@ def lesson_detail(request: HttpRequest, subject_code: str, lesson_pk: int) -> Ht
     subject = lesson.subject
     return render(request, 'subjects/lesson/detail.html', dict(subject=subject, lesson=lesson))
 
-
 @login_required
+@assert_role(Profile.Role.TEACHER)
 def add_lesson(request: HttpRequest, subject_code: str) -> HttpResponse | HttpResponseForbidden:
     subject = Subject.objects.get(code=subject_code)
     if request.method == 'POST':
         if (form := AddLessonForm(subject, request.POST)).is_valid():
+            messages.add_message(request, messages.SUCCESS, 'Lesson was successfully added.')
             lesson = form.save()
-            return redirect(lesson)
+            return redirect(subject)
     else:
         form = AddLessonForm(subject)
     return render(request, 'subjects/lesson/add.html', dict(subject=subject, form=form))
@@ -95,6 +100,7 @@ def enroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbidde
     if request.method == 'POST':
         if (form := EnrollmentForm(request.user, enrolling=True, data=request.POST)).is_valid():
             form.enrolls(request.user)
+            messages.add_message(request, messages.SUCCESS, 'Successfully enrolled in the chosen subjects.')
             return redirect('subjects:subject-list')
     else:
         form = EnrollmentForm(request.user)
@@ -107,6 +113,7 @@ def unenroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbid
     if request.method == 'POST':
         if (form := EnrollmentForm(request.user, enrolling=False, data=request.POST)).is_valid():
             form.unenrolls(request.user)
+            messages.add_message(request, messages.SUCCESS, 'Successfully unenrolled from the chosen subjects.')
             return redirect('subjects:subject-list')
     else:
         form = EnrollmentForm(request.user, enrolling=False)
