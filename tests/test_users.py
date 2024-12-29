@@ -1,5 +1,6 @@
 import re
 from http import HTTPStatus
+from pathlib import Path
 
 import pytest
 from pytest_django.asserts import assertContains, assertNotContains, assertRedirects
@@ -59,14 +60,19 @@ def test_edit_profile_contains_right_user_info(client, user_with_profile):
 
 @pytest.mark.django_db
 def test_edit_profile_works_properly(client, user_with_profile, fake, image):
-    client.force_login(user_with_profile)
-    payload = dict(bio=fake.paragraph(), avatar=image)
-    response = client.post('/user/edit/', payload, follow=True)
-    assertRedirects(response, f'/users/{user_with_profile.username}/')
-    profile = Profile.objects.get(user=user_with_profile)
-    assert profile.bio == payload['bio']
-    assert profile.avatar.size == image.size, 'Error al guardar la imagen de avatar.'
-    assertContains(response, 'User profile has been successfully saved.')
+    try:
+        client.force_login(user_with_profile)
+        payload = dict(bio=fake.paragraph(), avatar=image)
+        response = client.post('/user/edit/', payload, follow=True)
+        assertRedirects(response, f'/users/{user_with_profile.username}/')
+        profile = Profile.objects.get(user=user_with_profile)
+        assert profile.bio == payload['bio']
+        assert profile.avatar.size == image.size, 'Error al guardar la imagen de avatar.'
+        assertContains(response, 'User profile has been successfully saved.')
+    except Exception as err:
+        raise err
+    finally:
+        Path(profile.avatar.path).unlink(missing_ok=True)
 
 
 @pytest.mark.django_db
