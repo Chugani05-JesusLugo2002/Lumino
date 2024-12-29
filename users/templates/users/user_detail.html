@@ -30,7 +30,9 @@
               <a href="{% url 'users:edit-profile' %}" class="btn btn-primary d-flex align-items-center gap-2">
                 <i class="bi bi-pencil"></i> Edit Profile
               </a>
-              {% modal '<i class="bi bi-exclamation-diamond"></i> Leave' 'users:leave' css_class="btn btn-danger" title='Leave Lumino' modal_btn_label='Leave'%}
+              {% if user.profile.is_student %}
+                {% modal '<i class="bi bi-exclamation-diamond"></i> Leave' 'users:leave' css_class="btn btn-danger" title='Leave Lumino' modal_btn_label='Leave'%}
+              {% endif %}
             </div>
           {% endif %}
         </div>
