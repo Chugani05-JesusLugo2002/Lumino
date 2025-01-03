@@ -4,7 +4,6 @@ from subjects.models import Enrollment
 
 register = template.Library()
 
-
 @register.inclusion_tag('subjects/components/mark_row.html')
 def mark_row(enroll: Enrollment):
     student = enroll.student
@@ -21,6 +20,14 @@ def mark_row(enroll: Enrollment):
 def student_label(student):
     avatar = student.profile.avatar
     name = student.username
+    return dict(avatar=avatar, name=name)
+
+@register.inclusion_tag('subjects/components/student_label.html')
+def edit_mark_student_label(formset, form_index):
+    student = formset.forms[form_index].instance.student
+    avatar = student.profile.avatar
+    name = student.username
+    print(student)
     return dict(avatar=avatar, name=name)
 
 

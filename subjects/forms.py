@@ -1,8 +1,7 @@
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import HTML, Field, Layout
+from crispy_forms.layout import HTML, Field, Layout, Row, Submit
 from django import forms
-from django.core.exceptions import ValidationError
 
 from .models import Enrollment, Lesson, Subject
 
@@ -67,16 +66,24 @@ class EditLessonForm(forms.ModelForm):
 class EditMarkForm(forms.ModelForm):
     class Meta:
         model = Enrollment
-        fields = ('mark',)
-        widgets = {'mark': forms.TextInput(attrs={'size': 3})}
+        fields = ['mark']
 
-    def clean_mark(self):
-        mark = self.cleaned_data['mark']
-        if mark:
-            mark = int(mark)
-            if not 0 <= mark <= 10:
-                raise ValidationError('Mark is not between the allowed range (0-10)!')
-        return mark
+
+class EditMarkFormSetHelper(FormHelper):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.form_show_labels = False
+        self.layout = Layout(
+            Row(
+                HTML(
+                    '{% load subject_extras %} <div class="col-md-2">{% edit_mark_student_label formset forloop.counter0 %}</div>'
+                ),
+                Field('mark', wrapper_class='col-md-2'),
+                css_class='align-items-baseline',
+            )
+        )
+        self.add_input(Submit('save', 'Save marks', css_class='mt-3'))
+    
 
 
 class EnrollmentForm(forms.Form):

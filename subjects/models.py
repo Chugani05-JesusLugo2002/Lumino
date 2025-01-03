@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Subject(models.Model):
@@ -58,7 +59,9 @@ class Enrollment(models.Model):
         'subjects.Subject', on_delete=models.CASCADE, related_name='enrollments'
     )
     enrolled_at = models.DateField(auto_now_add=True)
-    mark = models.PositiveSmallIntegerField(null=True, blank=True)
+    mark = models.PositiveSmallIntegerField(
+        blank=True, null=True, validators=[MinValueValidator(1), MaxValueValidator(10)]
+    )
 
     def __str__(self) -> str:
         return f'{self.student}, enrolled at {self.enrolled_at} in {self.subject}'

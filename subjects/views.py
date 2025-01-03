@@ -3,8 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
-from .forms import AddLessonForm, EditLessonForm, EditMarkForm, EnrollmentForm
+from .forms import AddLessonForm, EditLessonForm, EditMarkForm, EnrollmentForm, EditMarkFormSetHelper
 from .models import Enrollment, Lesson, Subject
 from users.models import Profile
 from shared.utils import assert_role, assert_enrollment
@@ -86,18 +87,21 @@ def mark_list(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRes
 @assert_enrollment
 def edit_marks(request: HttpRequest, subject_code: str) -> HttpResponse | HttpResponseForbidden:
     subject = Subject.objects.get(code=subject_code)
-    enrolls = subject.enrollments.all()
-    enrolls_formset = modelformset_factory(Enrollment, form=EditMarkForm, extra=0)
-    formset = enrolls_formset(request.POST or None, queryset=enrolls)
+    
+    MarkFormSet = modelformset_factory(Enrollment, EditMarkForm, extra=0)
+    queryset = subject.enrollments.all()
     if request.method == 'POST':
-        if formset.is_valid():
+        if (formset := MarkFormSet(queryset=queryset, data=request.POST)).is_valid():
             formset.save()
-            return redirect('subjects:mark-list', subject_code=subject.code)
-    enrolls_and_formset = zip(enrolls, formset)
+            messages.add_message(request, messages.SUCCESS, 'Marks were successfully saved.')
+            return redirect(reverse('subjects:edit-marks', kwargs={'subject_code': subject_code}))
+    else:
+        formset = MarkFormSet(queryset=queryset)
+    helper = EditMarkFormSetHelper()
     return render(
         request,
         'subjects/mark/edit.html',
-        dict(subject=subject, enrolls_and_formset=enrolls_and_formset, formset=formset),
+        dict(subject=subject, formset=formset, helper=helper),
     )
 
 
