@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'markdownify.apps.MarkdownifyConfig',
     'sorl.thumbnail',
+    'django_rq',
 ]
 
 MARKDOWNIFY = {
@@ -71,6 +72,14 @@ MARKDOWNIFY = {
             'ul',
         ]
     }
+}
+
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+    },
 }
 
 MIDDLEWARE = [

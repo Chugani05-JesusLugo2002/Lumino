@@ -28,6 +28,7 @@ urlpatterns = [
     path('__reload__/', include('django_browser_reload.urls')),
     path('', shared.views.index, name='home'),
     path('admin/', admin.site.urls),
+    path('django-rq/', include('django_rq.urls')),
     path('login/', accounts.views.user_login, name='login'),
     path('signup/', accounts.views.user_signup, name='signup'),
     path('logout/', accounts.views.user_logout, name='logout'),
