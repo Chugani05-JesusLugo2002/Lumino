@@ -9,14 +9,17 @@ def assert_role(role):
             if user_profile.role != role:
                 return HttpResponseForbidden(f'You can\'t do that as {user_profile.get_role_display().lower()}!')
             return func(*args, **kwargs)
-
         return wrapper
-
     return decorator
 
 def assert_enrollment(func):
     def wrapper(*args, **kwargs):
         subject = Subject.objects.get(code=kwargs['subject_code'])
-        
+        user = args[0].user
+        if user.profile.is_student:
+            if subject not in user.enrolled.all():
+                return HttpResponseForbidden(f'Student {user} no have enrollment with {subject.code} subject.')
+        elif subject not in user.teacher_subjects.all():
+            return HttpResponseForbidden(f'Teacher {user} not teach on {subject.code} subject.')
         return func(*args, **kwargs)
     return wrapper

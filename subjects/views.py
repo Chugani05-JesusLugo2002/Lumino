@@ -25,12 +25,14 @@ def subject_detail(request: HttpRequest, subject_code: str) -> HttpResponse:
 
 
 @login_required
+@assert_enrollment
 def lesson_detail(request: HttpRequest, subject_code: str, lesson_pk: int) -> HttpResponse:
     lesson = Lesson.objects.get(pk=lesson_pk)
     subject = lesson.subject
     return render(request, 'subjects/lesson/detail.html', dict(subject=subject, lesson=lesson))
 
 @login_required
+@assert_enrollment
 @assert_role(Profile.Role.TEACHER)
 def add_lesson(request: HttpRequest, subject_code: str) -> HttpResponse | HttpResponseForbidden:
     subject = Subject.objects.get(code=subject_code)
@@ -45,6 +47,7 @@ def add_lesson(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRe
 
 
 @login_required
+@assert_enrollment
 def edit_lesson(
     request: HttpRequest, subject_code: str, lesson_pk: int
 ) -> HttpResponse | HttpResponseForbidden:
@@ -60,16 +63,19 @@ def edit_lesson(
 
 
 @login_required
+@assert_enrollment
 def delete_lesson(
     request: HttpRequest, subject_code: str, lesson_pk: int
 ) -> HttpResponse | HttpResponseForbidden:
     lesson = Lesson.objects.get(pk=lesson_pk)
     subject = lesson.subject
     lesson.delete()
+    messages.add_message(request, messages.SUCCESS, 'Lesson was successfully deleted.')
     return redirect(subject)
 
 
 @login_required
+@assert_enrollment
 def mark_list(request: HttpRequest, subject_code: str) -> HttpResponse | HttpResponseForbidden:
     subject = Subject.objects.get(code=subject_code)
     enrolls = subject.enrollments.all()
@@ -77,6 +83,7 @@ def mark_list(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRes
 
 
 @login_required
+@assert_enrollment
 def edit_marks(request: HttpRequest, subject_code: str) -> HttpResponse | HttpResponseForbidden:
     subject = Subject.objects.get(code=subject_code)
     enrolls = subject.enrollments.all()
