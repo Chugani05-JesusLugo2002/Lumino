@@ -87,16 +87,13 @@ def mark_list(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRes
 @assert_enrollment
 def edit_marks(request: HttpRequest, subject_code: str) -> HttpResponse | HttpResponseForbidden:
     subject = Subject.objects.get(code=subject_code)
-    
     MarkFormSet = modelformset_factory(Enrollment, EditMarkForm, extra=0)
     queryset = subject.enrollments.all()
     if request.method == 'POST':
         if (formset := MarkFormSet(queryset=queryset, data=request.POST)).is_valid():
             formset.save()
             messages.add_message(request, messages.SUCCESS, 'Marks were successfully saved.')
-            return redirect(reverse('subjects:edit-marks', kwargs={'subject_code': subject_code}))
-    else:
-        formset = MarkFormSet(queryset=queryset)
+    formset = MarkFormSet(queryset=queryset)
     helper = EditMarkFormSetHelper()
     return render(
         request,
