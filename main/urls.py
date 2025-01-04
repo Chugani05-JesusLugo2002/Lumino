@@ -35,4 +35,4 @@ urlpatterns = [
     path('user/', include('users.urls')),
     path('users/<str:username>/', users.views.user_detail, name='user-detail'),
     path('subjects/', include('subjects.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

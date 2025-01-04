@@ -43,3 +43,7 @@ def student_mark(student, subject):
             else 'bg-success-subtle text-success-emphasis'
         )
     return dict(mark=mark, css_class=css_class)
+
+@register.inclusion_tag('subjects/components/editor_help.html')
+def editor_help():
+    return None

@@ -1,3 +1,10 @@
-<div class="alert alert-warning" role="alert">
-    <i class="bi bi-exclamation-diamond"></i> {{ text }}
-</div> 
+{% load static %}
+
+<div class="row mt-5">
+    <div class="col">
+        <img src="{% static "/img/wizard.jpg" %}" alt="Whoosh alert" class="img-fluid">
+    </div>
+    <div class="col-8 d-flex flex-column justify-content-center">
+        <h3>Whoosh! {{ text }}</h3>
+    </div>
+</div>

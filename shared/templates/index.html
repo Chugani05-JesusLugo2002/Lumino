@@ -1,11 +1,41 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block title %}Lumino | Home{% endblock title %}
 
 {% block main %}
-  <h1><i class="bi bi-stars"></i> Welcome to Lumino</h1>
-  <div class="mt-3">
-    <a href="{% url 'signup' %}" class="btn btn-success">Signup</a></p>
-    <a href="{% url 'login' %}" class="btn btn-danger">Login</a></p>
+  <div class="row mt-5">
+    <div class="col">
+      <h1 class="display-5 fw-bold text-body-emphasis text-center mb-3"><i class="bi bi-stars"></i>Welcome to Lumino</h1>
+      <p class="lead text-center">Our magical academic platform for teachers and students! Enroll into your favourites courses and request your grade certificate, and as teacher, manage your subject marks easily and fast!</p>
+      <div class="mt-3 d-flex flex-column align-items-center mt-5">
+        <a href="{% url 'login' %}" class="btn btn-primary w-50"><i class="bi bi-box-arrow-in-right"></i> Login</a></p>
+        <a href="{% url 'signup' %}" class="btn btn-outline-primary w-50"><i class="bi bi-person-fill-add"></i> Signup</a></p>
+      </div>
+    </div>
+    <div class="col">
+      <img src="{% static "/img/hogwarts.jpg" %}" class="img-fluid rounded" alt="Hogwarts hero image">
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col">
+      <img src="{% static "/img/subject-list.png" %}" class="img-fluid rounded" alt="Subject list example">
+    </div>
+    <div class="col text-center align-items-center">
+      <h2 class="fw-bold"><i class="bi bi-backpack-fill"></i> As student...</h2>
+      <p class="lead">Manage your subjects easily, inspect the lessons, the content, and find their respective teachers contact.</p>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col text-center align-items-center">
+      <h2 class="fw-bold"><i class="bi bi-pencil-square"></i> As teacher...</h2>
+      <p class="lead">Write your lessons fast using our accesible tools with Markdown support, allowing better customization of your content.</p>
+    </div>
+    <div class="col">
+      <img src="{% static "/img/lesson-editor.png" %}" class="img-fluid rounded" alt="Lessons editor example">
+    </div>
   </div>
 {% endblock main %}

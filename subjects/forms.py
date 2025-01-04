@@ -1,6 +1,5 @@
-from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import HTML, Field, Layout, Row, Submit
+from crispy_forms.layout import HTML, Field, Layout, Row, Submit, Div
 from django import forms
 
 from .models import Enrollment, Lesson, Subject
@@ -19,9 +18,12 @@ class AddLessonForm(forms.ModelForm):
         self.helper.layout = Layout(
             Field('title'),
             Field('content'),
-            FormActions(
+            Div(
                 HTML(
                     '<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'
+                ),
+                HTML(
+                    '{% load editor_help from subject_extras %} {% editor_help %}'
                 ),
                 HTML(
                     '<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-plus-circle"></i> Add </button>'
@@ -51,9 +53,12 @@ class EditLessonForm(forms.ModelForm):
         self.helper.layout = Layout(
             Field('title'),
             Field('content'),
-            FormActions(
+            Div(
                 HTML(
                     '<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'
+                ),
+                HTML(
+                    '{% load editor_help from subject_extras %} {% editor_help %}'
                 ),
                 HTML(
                     '<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-check-circle"></i> Done </button>'
@@ -98,14 +103,14 @@ class EnrollmentForm(forms.Form):
         action_label = 'Enroll' if enrolling else 'Unenroll'
         self.helper.layout = Layout(
             Field('subjects'),
-            FormActions(
+            Div(
                 HTML(
                     '<a class="btn btn-danger btn-lg" href="{% url "subjects:subject-list" %}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'
                 ),
                 HTML(
-                    f'<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-check-circle"></i> {action_label} </button>'
+                    f'<button type="submit" class="btn btn-primary btn-lg mx-3"> <i class="bi bi-check-circle"></i> {action_label} </button>'
                 ),
-                css_class='mt-4 d-flex justify-content',
+                css_class='mt-4',
             ),
         )
         if enrolling:
