@@ -1,0 +1,15 @@
+/* Avoid navbar/footer override */
+main {
+    padding: 60px 0px;
+}
+
+/* Messages */
+.messages {
+    z-index: 100;
+    position: fixed;
+    left: 75%;
+}
+
+.message-close {
+    cursor: pointer;
+}
