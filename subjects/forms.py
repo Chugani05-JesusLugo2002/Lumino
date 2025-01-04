@@ -20,7 +20,7 @@ class AddLessonForm(forms.ModelForm):
             Field('content'),
             Div(
                 HTML(
-                    '<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'
+                    '<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Exit</a>'
                 ),
                 HTML(
                     '{% load editor_help from subject_extras %} {% editor_help %}'
@@ -55,13 +55,13 @@ class EditLessonForm(forms.ModelForm):
             Field('content'),
             Div(
                 HTML(
-                    '<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Cancel</a>'
+                    '<a class="btn btn-danger btn-lg" href="{{ subject.get_absolute_url }}"><i class="bi bi-arrow-left-circle"></i> Exit</a>'
                 ),
                 HTML(
                     '{% load editor_help from subject_extras %} {% editor_help %}'
                 ),
                 HTML(
-                    '<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-check-circle"></i> Done </button>'
+                    '<button type="submit" class="btn btn-primary btn-lg"> <i class="bi bi-check-circle"></i> Save </button>'
                 ),
                 css_class='mt-4 d-flex justify-content-between',
             ),
