@@ -1,4 +1,11 @@
 <div>
+    {% if user.profile.can_request_certificate %}
+        <a href="{% url "subjects:request-certificate" %}" class="btn btn-primary">Request certificate</a>
+    {% else %}
+        <span data-bs-toggle="tooltip" data-bs-title="You cannot request a certificate without all marks!" data-bs-placement="left">
+            <a class="btn btn-primary disabled" aria-disabled="true">Request certificate</a>
+        </span>
+    {% endif %}
     <a href="{% url "subjects:enroll-subjects" %}" class="btn btn-success">Enroll</a>
     <a href="{% url "subjects:unenroll-subjects" %}" class="btn btn-outline-danger">Un-enroll</a>
 </div>

@@ -18,6 +18,9 @@ class Profile(models.Model):
     def is_student(self) -> bool:
         return self.role == Profile.Role.STUDENT
 
+    def can_request_certificate(self) -> bool:
+        return self.is_student and self.user.enrollments.all().count() > 0 and self.user.enrollments.filter(mark=None).count() == 0
+
     def __str__(self) -> str:
         return f'{self.role}: {self.user}'
 

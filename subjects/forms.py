@@ -85,7 +85,7 @@ class EditMarkFormSetHelper(FormHelper):
                 ),
                 Field('mark', wrapper_class='col-md-2'),
                 css_class='align-items-baseline',
-            )
+            ),
         )
         self.add_input(Submit('save', 'Save marks', css_class='mt-3'))
     

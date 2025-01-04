@@ -50,6 +50,7 @@ def add_lesson(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRe
 
 @login_required
 @assert_enrollment
+@assert_role(Profile.Role.TEACHER)
 def edit_lesson(
     request: HttpRequest, subject_code: str, lesson_pk: int
 ) -> HttpResponse | HttpResponseForbidden:
@@ -65,6 +66,7 @@ def edit_lesson(
 
 @login_required
 @assert_enrollment
+@assert_role(Profile.Role.TEACHER)
 def delete_lesson(
     request: HttpRequest, subject_code: str, lesson_pk: int
 ) -> HttpResponse | HttpResponseForbidden:
@@ -77,6 +79,7 @@ def delete_lesson(
 
 @login_required
 @assert_enrollment
+@assert_role(Profile.Role.TEACHER)
 def mark_list(request: HttpRequest, subject_code: str) -> HttpResponse | HttpResponseForbidden:
     subject = Subject.objects.get(code=subject_code)
     enrolls = subject.enrollments.all()
@@ -85,6 +88,7 @@ def mark_list(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRes
 
 @login_required
 @assert_enrollment
+@assert_role(Profile.Role.TEACHER)
 def edit_marks(request: HttpRequest, subject_code: str) -> HttpResponse | HttpResponseForbidden:
     subject = Subject.objects.get(code=subject_code)
     MarkFormSet = modelformset_factory(Enrollment, EditMarkForm, extra=0)
@@ -103,6 +107,7 @@ def edit_marks(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRe
 
 
 @login_required
+@assert_role(Profile.Role.STUDENT)
 def enroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
     title = 'Enrollments'
     if request.method == 'POST':
@@ -116,6 +121,7 @@ def enroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbidde
 
 
 @login_required
+@assert_role(Profile.Role.STUDENT)
 def unenroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
     title = 'Unenrollments'
     if request.method == 'POST':
@@ -129,8 +135,9 @@ def unenroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbid
 
 
 @login_required
+@assert_role(Profile.Role.STUDENT)
 def request_certificate(request: HttpRequest) -> HttpResponse:
-    if request.user.enrollments.filter(mark=None).count() > 0:
+    if request.user.profile.can_request_certificate():
         return HttpResponseForbidden()
     deliver_certificate.delay(request.build_absolute_uri(), request.user)
     return render(request, 'subjects/certificate/feedback.html')
