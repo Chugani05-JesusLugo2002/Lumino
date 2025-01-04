@@ -58,9 +58,8 @@ def edit_lesson(
     if request.method == 'POST':
         if (form := EditLessonForm(request.POST, instance=lesson)).is_valid():
             lesson = form.save()
-            return redirect(reverse('subjects:edit-lesson', kwargs=dict(subject_code=subject_code, lesson_pk=lesson_pk)))
-    else:
-        form = EditLessonForm(instance=lesson)
+            messages.add_message(request, messages.SUCCESS, 'Changes were successfully saved.')
+    form = EditLessonForm(instance=lesson)
     return render(request, 'subjects/lesson/edit.html', dict(subject=subject, form=form))
 
 
