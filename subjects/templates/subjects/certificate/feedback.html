@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Certificate send | Lumino{% endblock %}
+
+{% block main %}
+    <section class="my-3 d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <a href="{% url "subjects:subject-list" %}" class="h2 mx-3" data-bs-toggle="tooltip" data-bs-title="Back to subjects"><i class="bi bi-arrow-left-circle-fill"></i></a> 
+            <h1>Se ha enviado su certificado de notas.</h1>
+        </div>
+    </section>
+{% endblock %}

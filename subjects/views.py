@@ -7,6 +7,7 @@ from django.urls import reverse
 
 from .forms import AddLessonForm, EditLessonForm, EditMarkForm, EnrollmentForm, EditMarkFormSetHelper
 from .models import Enrollment, Lesson, Subject
+from .tasks import deliver_certificate
 from users.models import Profile
 from shared.utils import assert_role, assert_enrollment
 
@@ -133,4 +134,7 @@ def unenroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbid
 
 @login_required
 def request_certificate(request: HttpRequest) -> HttpResponse:
-    pass
+    if request.user.enrollments.filter(mark=None).count() > 0:
+        return HttpResponseForbidden()
+    deliver_certificate.delay(request.build_absolute_uri(), request.user)
+    return render(request, 'subjects/certificate/feedback.html')
