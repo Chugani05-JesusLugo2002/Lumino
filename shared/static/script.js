@@ -6,13 +6,18 @@ $(document).ready(function () {
     // Remove messages (automatically and manually)
     fadeOutMessages();
     closeMessage();
+
+    // Navigation
+    $("#navigation-button").click(function(e) {
+        displayMap();
+    });
 });
 
 const fadeOutMessages = () => {
     const lifetimeInMs = 5000;
     if ($(".messages").length > 0) {
         setTimeout(() => {
-            $(".messages").fadeOut("slow", function () {
+            $(".messages").fadeOut("slow", function() {
                 $(this).remove();
             });
         }, lifetimeInMs);
@@ -20,10 +25,13 @@ const fadeOutMessages = () => {
 }
 
 const closeMessage = () => {
-    $(".message-close").click(function (e) { 
-        e.preventDefault();
+    $(".message-close").click(function() { 
         $(this).parent().fadeOut('fast', function () {
             $(this).remove()
         })
     });
+}
+
+const displayMap = () => {
+    $("nav").fadeToggle()
 }
