@@ -3,13 +3,14 @@ $(document).ready(function () {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
-    // Remove messages (automatically and manually)
+    // Remove messages automatically
     fadeOutMessages();
-    closeMessage();
 
-    // Navigation
-    $("#navigation-button").click(function(e) {
-        displayMap();
+    // Remove messages manually
+    $(".message-close").click(function() { 
+        $(this).parent().fadeOut('fast', function () {
+            $(this).remove()
+        })
     });
 });
 
@@ -22,16 +23,4 @@ const fadeOutMessages = () => {
             });
         }, lifetimeInMs);
     }
-}
-
-const closeMessage = () => {
-    $(".message-close").click(function() { 
-        $(this).parent().fadeOut('fast', function () {
-            $(this).remove()
-        })
-    });
-}
-
-const displayMap = () => {
-    $("nav").fadeToggle()
 }

@@ -1,11 +1,20 @@
 <div class="navbar navbar-expand-lg bg-body-secondary fixed-top" role="navigation">
     <div class="container">
-        <a href="{% url "home" %}" class="navbar-brand h1"><i class="bi bi-stars"></i> Lumino</a>
-        <button id="navigation-button" class="navbar nav-link"><i class="bi bi-compass px-2"></i> Navigation</button>
         {% if user.is_authenticated %}
-            {% include "./components/auth-section/auth.html" %}
+            <a class="navbar nav-link" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+                <i class="bi bi-compass-fill"></i><span class="mx-1">Menu</span>
+            </a>          
+        {% endif %}
+        <a href="{% url "home" %}" class="navbar-brand display-5 fw-bold"><i class="bi bi-stars"></i> Lumino</a>
+        {% if user.is_authenticated %}
+            {% include "./components/auth-section/auth.html" %} 
         {% else %}
             {% include "./components/auth-section/no-auth.html" %}
         {% endif %}
     </div>
 </div>
+
+
+
+
+

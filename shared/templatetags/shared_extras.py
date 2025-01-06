@@ -32,3 +32,8 @@ def modal(
 @register.inclusion_tag('components/alert.html')
 def alert(text: str):
     return dict(text=text)
+
+@register.inclusion_tag('components/user-subject-list.html')
+def user_subject_list(user):
+    subjects = user.profile.get_subjects()
+    return dict(subjects=subjects)
