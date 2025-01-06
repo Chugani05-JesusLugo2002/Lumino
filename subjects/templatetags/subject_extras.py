@@ -27,7 +27,6 @@ def edit_mark_student_label(formset, form_index):
     student = formset.forms[form_index].instance.student
     avatar = student.profile.avatar
     name = student.username
-    print(student)
     return dict(avatar=avatar, name=name)
 
 
