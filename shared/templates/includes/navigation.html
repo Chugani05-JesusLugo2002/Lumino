@@ -1,0 +1,25 @@
+{% load navigation_subject_list from shared_extras %}
+
+{% if user.is_authenticated %}
+    <nav>
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel"><i class="bi bi-stars"></i> Lumino - Navigation menu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action fw-bold" href="{% url "home" %}">Home</a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between fw-bold" data-bs-toggle="collapse" href="#subjectsDropdown">
+                        <span>Subjects</span>
+                        <i class="bi bi-caret-down"></i>
+                    </a>
+                    <div class="collapse" id="subjectsDropdown">
+                        {% navigation_subject_list user %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+{% endif %}
+

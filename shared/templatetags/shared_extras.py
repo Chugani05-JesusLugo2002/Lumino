@@ -1,10 +1,9 @@
-from uuid import uuid4
-
 from django import template
 from django.urls import reverse
 
-register = template.Library()
+from uuid import uuid4
 
+register = template.Library()
 
 @register.inclusion_tag('components/modal.html')
 def modal(
@@ -33,7 +32,7 @@ def modal(
 def alert(text: str):
     return dict(text=text)
 
-@register.inclusion_tag('components/user-subject-list.html')
-def user_subject_list(user):
+@register.inclusion_tag('components/navigation-subject-list.html')
+def navigation_subject_list(user):
     subjects = user.profile.get_subjects()
     return dict(subjects=subjects)

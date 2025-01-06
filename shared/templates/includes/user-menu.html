@@ -1,0 +1,15 @@
+{% load thumbnail %}
+
+<span class="nav-item dropdown">
+    <a class="nav-item nav-link btn dropdown-toggle d-flex align-items-center p-1 pe-2" data-bs-toggle="dropdown">
+        {% thumbnail user.profile.avatar "32x32" as avatar %}
+            <img class="rounded-circle me-1" width="32" height="32" src="{{ avatar.url }}" alt="My profile avatar"> 
+        {% endthumbnail %}
+    </a>
+    <ul class="dropdown-menu">
+        <li><h6 class="dropdown-header">{{ user }}</h6></li>
+        <li><a href="{% url "user-detail" user %}" class="dropdown-item"><i class="bi bi-person-fill"></i> My profile</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a href="{% url "logout" %}" class="dropdown-item"><i class="bi bi-door-open-fill"></i> Logout</a></li>
+    </ul>
+</span>
