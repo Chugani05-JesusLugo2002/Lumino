@@ -7,7 +7,6 @@ from crispy_bootstrap5.bootstrap5 import FloatingField
 
 from users.models import Profile    
 
-
 class LoginForm(forms.Form):
     username = forms.SlugField(max_length=64, required=True)
     password = forms.CharField(max_length=64, required=True, widget=forms.PasswordInput)
@@ -62,7 +61,6 @@ class SignupForm(forms.ModelForm):
             </p>'''),
         )
         
-
     def clean(self):
        User = get_user_model()
        email = self.cleaned_data.get('email')

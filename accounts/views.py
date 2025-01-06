@@ -1,10 +1,9 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
-from django.contrib import messages
 
 from accounts.forms import LoginForm, SignupForm
-
 
 def user_login(request: HttpRequest) -> HttpResponse:
     form = LoginForm(request.POST or None)
@@ -23,7 +22,7 @@ def user_signup(request: HttpRequest) -> HttpResponse:
     form = SignupForm(request.POST or None)
     if form.is_valid():
         user = form.save()
-        messages.add_message(request, messages.SUCCESS, 'Welcome to Lumino. Nice to see you!') 
         login(request, user)
+        messages.add_message(request, messages.SUCCESS, 'Welcome to Lumino. Nice to see you!') 
         return redirect('subjects:subject-list')
     return render(request, 'accounts/signup.html', dict(form=form))
