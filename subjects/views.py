@@ -17,18 +17,16 @@ def subject_list(request: HttpRequest) -> HttpResponse:
     subjects = request.user.profile.get_subjects()
     return render(request, 'subjects/subject/list.html', dict(subjects=subjects))
 
-
 @login_required
 @assert_enrollment
-def subject_detail(request: HttpRequest, subject_code: str) -> HttpResponse:
+def subject_detail(request: HttpRequest, subject_code: str) -> HttpResponse | HttpResponseForbidden:
     subject = Subject.objects.get(code=subject_code)
     lessons = subject.lessons.all()
     return render(request, 'subjects/subject/detail.html', dict(subject=subject, lessons=lessons))
 
-
 @login_required
 @assert_enrollment
-def lesson_detail(request: HttpRequest, subject_code: str, lesson_pk: int) -> HttpResponse:
+def lesson_detail(request: HttpRequest, subject_code: str, lesson_pk: int) -> HttpResponse | HttpResponseForbidden:
     lesson = Lesson.objects.get(pk=lesson_pk)
     subject = lesson.subject
     return render(request, 'subjects/lesson/detail.html', dict(subject=subject, lesson=lesson))
@@ -38,13 +36,11 @@ def lesson_detail(request: HttpRequest, subject_code: str, lesson_pk: int) -> Ht
 @assert_role(Profile.Role.TEACHER)
 def add_lesson(request: HttpRequest, subject_code: str) -> HttpResponse | HttpResponseForbidden:
     subject = Subject.objects.get(code=subject_code)
-    if request.method == 'POST':
-        if (form := AddLessonForm(subject, request.POST)).is_valid():
-            messages.add_message(request, messages.SUCCESS, 'Lesson was successfully added.')
-            lesson = form.save()
-            return redirect(subject)
-    else:
-        form = AddLessonForm(subject)
+    if (form := AddLessonForm(subject, request.POST)).is_valid():
+        lesson = form.save()
+        messages.add_message(request, messages.SUCCESS, 'Lesson was successfully added.')
+        return redirect(subject)
+    form = AddLessonForm(subject)
     return render(request, 'subjects/lesson/add.html', dict(subject=subject, form=form))
 
 
@@ -56,10 +52,9 @@ def edit_lesson(
 ) -> HttpResponse | HttpResponseForbidden:
     lesson = Lesson.objects.get(pk=lesson_pk)
     subject = lesson.subject
-    if request.method == 'POST':
-        if (form := EditLessonForm(request.POST, instance=lesson)).is_valid():
-            lesson = form.save()
-            messages.add_message(request, messages.SUCCESS, 'Changes were successfully saved.')
+    if request.method == 'POST' and (form := EditLessonForm(request.POST, instance=lesson)).is_valid():
+        lesson = form.save()
+        messages.add_message(request, messages.SUCCESS, 'Changes were successfully saved.')
     form = EditLessonForm(instance=lesson)
     return render(request, 'subjects/lesson/edit.html', dict(subject=subject, form=form))
 
@@ -93,10 +88,9 @@ def edit_marks(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRe
     subject = Subject.objects.get(code=subject_code)
     MarkFormSet = modelformset_factory(Enrollment, EditMarkForm, extra=0)
     queryset = subject.enrollments.all()
-    if request.method == 'POST':
-        if (formset := MarkFormSet(queryset=queryset, data=request.POST)).is_valid():
-            formset.save()
-            messages.add_message(request, messages.SUCCESS, 'Marks were successfully saved.')
+    if request.method == 'POST' and (formset := MarkFormSet(queryset=queryset, data=request.POST)).is_valid():
+        formset.save()
+        messages.add_message(request, messages.SUCCESS, 'Marks were successfully saved.')
     formset = MarkFormSet(queryset=queryset)
     helper = EditMarkFormSetHelper()
     return render(
@@ -109,7 +103,6 @@ def edit_marks(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRe
 @login_required
 @assert_role(Profile.Role.STUDENT)
 def enroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
-    title = 'Enrollments'
     if request.method == 'POST':
         if (form := EnrollmentForm(request.user, enrolling=True, data=request.POST)).is_valid():
             form.enrolls(request.user)
@@ -117,13 +110,12 @@ def enroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbidde
             return redirect('subjects:subject-list')
     else:
         form = EnrollmentForm(request.user)
-    return render(request, 'subjects/subject/enrollment.html', dict(form=form, title=title))
+    return render(request, 'subjects/subject/enrollment.html', dict(form=form))
 
 
 @login_required
 @assert_role(Profile.Role.STUDENT)
 def unenroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbidden:
-    title = 'Unenrollments'
     if request.method == 'POST':
         if (form := EnrollmentForm(request.user, enrolling=False, data=request.POST)).is_valid():
             form.unenrolls(request.user)
@@ -131,13 +123,13 @@ def unenroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbid
             return redirect('subjects:subject-list')
     else:
         form = EnrollmentForm(request.user, enrolling=False)
-    return render(request, 'subjects/subject/enrollment.html', dict(form=form, title=title))
+    return render(request, 'subjects/subject/enrollment.html', dict(form=form))
 
 
 @login_required
 @assert_role(Profile.Role.STUDENT)
 def request_certificate(request: HttpRequest) -> HttpResponse:
-    if request.user.profile.can_request_certificate():
-        return HttpResponseForbidden()
+    if not request.user.profile.can_request_certificate():
+        return HttpResponseForbidden("You cannot request the grade certificate!")
     deliver_certificate.delay(request.build_absolute_uri(), request.user)
     return render(request, 'subjects/certificate/feedback.html')

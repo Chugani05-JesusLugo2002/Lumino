@@ -5,12 +5,6 @@
 {% block main %}
 <div class="container mt-5">
     <h1 class="mb-4 text-center">Editing Lesson</h1>
-
-    <form method="POST" novalidate class="needs-validation">
-        {% csrf_token %}
-        <div class="card shadow bg-light p-4">
-            {% crispy form %}
-        </div>
-    </form>
+    {% crispy form %}
 </div>
 {% endblock main %}

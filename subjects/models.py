@@ -33,18 +33,18 @@ class Lesson(models.Model):
     def __str__(self) -> str:
         return self.title
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse(
             'subjects:lesson-detail',
             kwargs={'subject_code': self.subject.code, 'lesson_pk': self.pk},
         )
 
-    def get_edit_url(self):
+    def get_edit_url(self) -> str:
         return reverse(
             'subjects:edit-lesson', kwargs={'subject_code': self.subject.code, 'lesson_pk': self.pk}
         )
 
-    def get_delete_url(self):
+    def get_delete_url(self) -> str:
         return reverse(
             'subjects:delete-lesson',
             kwargs={'subject_code': self.subject.code, 'lesson_pk': self.pk},

@@ -1,6 +1,6 @@
+from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import HTML, Field, Layout, Row, Submit, Div
-from django import forms
 
 from .models import Enrollment, Lesson, Subject
 
@@ -50,6 +50,8 @@ class EditLessonForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.helper.form_class = "card shadow bg-light p-4 needs-validation"
+        self.helper.attrs = dict(novalidate=True)
         self.helper.layout = Layout(
             Field('title'),
             Field('content'),
@@ -88,8 +90,6 @@ class EditMarkFormSetHelper(FormHelper):
             ),
         )
         self.add_input(Submit('save', 'Save marks', css_class='mt-3'))
-    
-
 
 class EnrollmentForm(forms.Form):
     subjects = forms.ModelMultipleChoiceField(
@@ -98,6 +98,8 @@ class EnrollmentForm(forms.Form):
 
     def __init__(self, user, enrolling=True, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.title = 'Enrollments' if enrolling else 'Unenrollments'
+        self.fields['subjects'].queryset = self.choice_queryset(enrolling, user)
         self.helper = FormHelper()
         self.helper.form_show_labels = False
         action_label = 'Enroll' if enrolling else 'Unenroll'
@@ -113,21 +115,18 @@ class EnrollmentForm(forms.Form):
                 css_class='mt-4',
             ),
         )
-        if enrolling:
-            self.fields['subjects'].queryset = self.fields['subjects'].queryset.exclude(
-                pk__in=user.enrolled.all()
-            )
-        else:
-            self.fields['subjects'].queryset = self.fields['subjects'].queryset.filter(
-                pk__in=user.enrolled.all()
-            )
+            
+    def choice_queryset(self, is_enrolling, user):
+        if is_enrolling:
+            return self.fields['subjects'].queryset.exclude(pk__in=user.enrolled.all())
+        return self.fields['subjects'].queryset.filter(pk__in=user.enrolled.all())
 
-    def enrolls(self, user):
+    def enrolls(self, user) -> None:
         subjects = self.cleaned_data['subjects']
         for subject in subjects:
             user.enrolled.add(subject)
 
-    def unenrolls(self, user):
+    def unenrolls(self, user) -> None:
         subjects = self.cleaned_data['subjects']
         for subject in subjects:
             user.enrolled.remove(subject)
