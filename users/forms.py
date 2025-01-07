@@ -30,3 +30,8 @@ class EditProfileForm(forms.ModelForm):
                 css_class='mt-4 d-flex justify-content-between',
             ),
         )
+
+    def clean_avatar(self):
+        avatar = self.cleaned_data["avatar"]
+        return avatar if avatar else Profile.DEFAULT_AVATAR_URL
+    

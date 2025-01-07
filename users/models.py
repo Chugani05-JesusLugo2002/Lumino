@@ -3,6 +3,7 @@ from django.db import models
 
 
 class Profile(models.Model):
+    DEFAULT_AVATAR_URL = 'avatars/noavatar.png'
     class Role(models.TextChoices):
         STUDENT = 'S', 'Student'
         TEACHER = 'T', 'Teacher'
@@ -11,7 +12,7 @@ class Profile(models.Model):
     role = models.CharField(max_length=1, choices=Role, default=Role.STUDENT)
     bio = models.TextField(blank=True, null=True)
     avatar = models.ImageField(
-        blank=True, null=True, upload_to='avatars', default='avatars/noavatar.png'
+        blank=True, null=True, upload_to='avatars', default=DEFAULT_AVATAR_URL
     )
 
     @property
