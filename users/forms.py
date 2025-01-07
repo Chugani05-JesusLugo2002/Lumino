@@ -14,9 +14,12 @@ class EditProfileForm(forms.ModelForm):
             'bio',
         )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.user = user
         self.helper = FormHelper()
+        self.helper.form_class = 'card shadow bg-light p-4 needs-validation'
+        self.helper.attrs = dict(novalidate=True, enctype="multipart/form-data")
         self.helper.layout = Layout(
             Field('avatar'),
             Field('bio'),
@@ -34,4 +37,10 @@ class EditProfileForm(forms.ModelForm):
     def clean_avatar(self):
         avatar = self.cleaned_data["avatar"]
         return avatar if avatar else Profile.DEFAULT_AVATAR_URL
+    
+    def save(self, *args, **kwargs):
+        profile = super().save(commit=False)
+        profile.user = self.user
+        profile = super().save(*args, **kwargs)
+        return profile
     

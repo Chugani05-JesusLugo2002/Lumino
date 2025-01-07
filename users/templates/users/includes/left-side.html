@@ -1,0 +1,9 @@
+{% load thumbnail %}
+{% load fullname from users_extras %}
+
+<div class="col-md-4 bg-success text-white text-center d-flex flex-column py-5">
+    {% thumbnail target_user.profile.avatar "120x120" as avatar %}
+      <img src="{{ avatar.url }}" alt="{{ target_user }} avatar" width="120" height="120" class="rounded-circle border border-3 border-light mx-auto mb-3">
+    {% endthumbnail %}
+    <h5>{{ user|fullname }}</h5>
+</div>

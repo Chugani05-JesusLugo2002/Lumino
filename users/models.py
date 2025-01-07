@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.urls import reverse
 
 
 class Profile(models.Model):
@@ -19,13 +20,15 @@ class Profile(models.Model):
     def is_student(self) -> bool:
         return self.role == Profile.Role.STUDENT
 
+    def __str__(self) -> str:
+        return f'{self.get_role_display()} {self.user.first_name.title()} {self.user.last_name.title()}'
+    
     def can_request_certificate(self) -> bool:
         return self.is_student and self.user.enrollments.all().count() > 0 and self.user.enrollments.filter(mark=None).count() == 0
 
-    def __str__(self) -> str:
-        return f'{self.role}: {self.user}'
-
     def get_subjects(self):
-        if self.is_student:
-            return self.user.enrolled.all()
-        return self.user.teacher_subjects.all()
+        return self.user.enrolled.all() if self.is_student else self.user.taught.all()
+    
+    def get_absolute_url(self):
+        return reverse("user-detail", kwargs={"username": self.user})
+    

@@ -1,43 +1,14 @@
 {% extends "base.html" %}
 
-{% load thumbnail %}
-{% load modal from shared_extras %}
-
-{% block title %}Lumino | {{ target_user }}'s profile{% endblock title %}
+{% block title %}{{ target_user }}'s profile{% endblock %}
 
 {% block main %}
-<div class="container py-5 mb-5">
-  <div class="card shadow border-0" style="max-width: 800px; margin: 0 auto;">
-    <div class="row">
-      <div class="col-md-4 bg-success text-white text-center d-flex flex-column py-5">
-        {% thumbnail target_user.profile.avatar "120x120" as avatar %}
-          <img src="{{ avatar.url }}" alt="{{ target_user }} avatar" class="rounded-circle border border-3 border-light mx-auto mb-3">
-        {% endthumbnail %}
-        <h2 class="h5">{{ user.first_name }} {{ user.last_name }}</h2>
-      </div>
-
-      <div class="col-md-8">
-        <div class="card-body">
-          <h1 class="card-title text-center mb-4">{{ target_user.profile.get_role_display }} {{ target_user.username }}</h1>
-          <p class="text-secondary"><i class="bi bi-envelope"></i> {{ target_user.email }}</p>
-          <p class="card-text">
-            {{ target_user.profile.bio }}
-          </p>
-          <hr>
-
-          {% if user == target_user %}
-            <div class="d-flex justify-content-center gap-4">
-              <a href="{% url 'users:edit-profile' %}" class="btn btn-primary d-flex align-items-center gap-2">
-                <i class="bi bi-pencil"></i> Edit Profile
-              </a>
-              {% if user.profile.is_student %}
-                {% modal '<i class="bi bi-exclamation-diamond"></i> Leave' 'users:leave' css_class="btn btn-danger" title='Leave Lumino' modal_btn_label='Leave'%}
-              {% endif %}
-            </div>
-          {% endif %}
-        </div>
+  <div class="container py-5 mb-5">
+    <div class="card shadow border-0" style="max-width: 800px; margin: 0 auto;">
+      <div class="row">
+        {% include "./includes/left-side.html" %}
+        {% include "./includes/right-side.html" %}
       </div>
     </div>
   </div>
-</div>
-{% endblock main %}
+{% endblock %}
