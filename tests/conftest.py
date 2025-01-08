@@ -10,8 +10,11 @@ from users.models import Profile
 
 
 @pytest.fixture
-def user(django_user_model):
-    return baker.make(django_user_model, _fill_optional=True)
+def user(django_user_model, fake):
+    user = baker.make(django_user_model, _fill_optional=True)
+    user.profile.bio = fake.paragraph()
+    user.profile.save()
+    return user
 
 
 @pytest.fixture
@@ -39,29 +42,35 @@ def signup_data(fake):
 
 
 @pytest.fixture
-def student(django_user_model):
+def student(django_user_model, fake):
     user = baker.make(django_user_model, _fill_optional=True)
-    return user
-
-
-@pytest.fixture
-def another_student(django_user_model):
-    user = baker.make(django_user_model, _fill_optional=True)
-    return user
-
-
-@pytest.fixture
-def teacher(django_user_model):
-    user = baker.make(django_user_model, _fill_optional=True)
-    user.profile.role = Profile.Role.TEACHER
+    user.profile.bio = fake.paragraph()
     user.profile.save()
     return user
 
 
 @pytest.fixture
-def another_teacher(django_user_model):
+def another_student(django_user_model, fake):
+    user = baker.make(django_user_model, _fill_optional=True)
+    user.profile.bio = fake.paragraph()
+    user.profile.save()
+    return user
+
+
+@pytest.fixture
+def teacher(django_user_model, fake):
     user = baker.make(django_user_model, _fill_optional=True)
     user.profile.role = Profile.Role.TEACHER
+    user.profile.bio = fake.paragraph()
+    user.profile.save()
+    return user
+
+
+@pytest.fixture
+def another_teacher(django_user_model, fake):
+    user = baker.make(django_user_model, _fill_optional=True)
+    user.profile.role = Profile.Role.TEACHER
+    user.profile.bio = fake.paragraph()
     user.profile.save()
     return user
 

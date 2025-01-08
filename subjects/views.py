@@ -130,6 +130,6 @@ def unenroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbid
 @assert_role(Profile.Role.STUDENT)
 def request_certificate(request: HttpRequest) -> HttpResponse:
     if not request.user.profile.can_request_certificate():
-        return HttpResponseForbidden("You cannot request the grade certificate!")
+        return HttpResponseForbidden()
     deliver_certificate.delay(request.build_absolute_uri(), request.user)
     return render(request, 'subjects/certificate/feedback.html')

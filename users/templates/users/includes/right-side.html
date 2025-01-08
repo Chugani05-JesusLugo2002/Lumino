@@ -4,11 +4,7 @@
     <div class="card-body">
         <h1 class="card-title text-center mb-4">{{ target_user.profile }}</h1>
         <p class="text-secondary"><i class="bi bi-envelope"></i> {{ target_user.email }}</p>
-        {% if target_user.profile.bio|length > 0 %}
-            <p class="card-text">{{ target_user.profile.bio }}</p>
-        {% else %}
-            <p class="text-secondary">Bio not provided!</p>
-        {% endif %}
+        <p class="card-text">{{ target_user.profile.bio }}</p>
         <hr>
         {% if user == target_user %}
             <div class="d-flex justify-content-center gap-4">
