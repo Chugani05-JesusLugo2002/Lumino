@@ -1,6 +1,10 @@
 import pytest
 from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 from pytest_django.asserts import assertRedirects
+
+from subjects.models import Enrollment, Lesson, Subject
+from users.models import Profile
 
 
 @pytest.mark.django_db
@@ -19,39 +23,57 @@ def test_required_apps_are_installed():
 
 
 @pytest.mark.django_db
-def test_subject_model_has_proper_fields(subject):
+def test_subject_model_has_proper_fields():
     PROPER_FIELDS = ('code', 'name', 'teacher', 'students')
     for field in PROPER_FIELDS:
         assert (
-            getattr(subject, field) is not None
+            getattr(Subject, field) is not None
         ), f'El campo <{field}> no está en el modelo Subject.'
 
 
 @pytest.mark.django_db
-def test_lesson_model_has_proper_fields(lesson):
+def test_lesson_model_has_proper_fields():
     PROPER_FIELDS = ('subject', 'title', 'content')
     for field in PROPER_FIELDS:
         assert (
-            getattr(lesson, field) is not None
+            getattr(Lesson, field) is not None
         ), f'El campo <{field}> no está en el modelo Lesson.'
 
 
 @pytest.mark.django_db
-def test_enrollment_model_has_proper_fields(enrollment):
+def test_enrollment_model_has_proper_fields():
     PROPER_FIELDS = ('student', 'subject', 'enrolled_at', 'mark')
     for field in PROPER_FIELDS:
         assert (
-            getattr(enrollment, field) is not None
+            getattr(Enrollment, field) is not None
         ), f'El campo <{field}> no está en el modelo Enrollment.'
 
 
 @pytest.mark.django_db
-def test_profile_model_has_proper_fields(profile):
+def test_profile_model_has_proper_fields():
     PROPER_FIELDS = ('user', 'role', 'bio', 'avatar')
     for field in PROPER_FIELDS:
         assert (
-            getattr(profile, field) is not None
+            getattr(Profile, field) is not None
         ), f'El campo <{field}> no está en el modelo Profile.'
+
+
+@pytest.mark.django_db
+def test_enrollment_model_has_proper_validators():
+    validators = Enrollment.mark.field.validators
+    assert (
+        len(validators) == 2
+    ), 'Debe haber dos validadores (min y max) para el campo "mark" de Enrollment.'
+    if 'less' in validators[0].message:
+        max_validator = validators[0]
+        min_validator = validators[1]
+    else:
+        min_validator = validators[0]
+        max_validator = validators[1]
+    assert isinstance(min_validator, MinValueValidator)
+    assert isinstance(max_validator, MaxValueValidator)
+    assert min_validator.limit_value == 1
+    assert max_validator.limit_value == 10
 
 
 @pytest.mark.django_db

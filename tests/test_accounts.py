@@ -1,5 +1,4 @@
 import pytest
-from model_bakery import baker
 from pytest_django.asserts import assertContains, assertRedirects
 
 from users.models import Profile
@@ -17,10 +16,9 @@ def test_login_displays_correct_form(client, login_data):
 def test_login_works(client, login_data, django_user_model):
     REDIRECT_URL = '/subjects/'
 
-    user = django_user_model.objects.create_user(
+    django_user_model.objects.create_user(
         username=login_data['username'], password=login_data['password']
     )
-    baker.make(Profile, user=user)
     response = client.post(
         '/login/',
         dict(username=login_data['username'], password=login_data['password']),
@@ -87,6 +85,12 @@ def test_signup_fails_when_any_unique_field_is_duplicated(client, signup_data, u
 
 
 @pytest.mark.django_db
+def test_signup_contains_a_link_to_login(client):
+    response = client.get('/signup/')
+    assertContains(response, 'href="/login/"')
+
+
+@pytest.mark.django_db
 def test_signup_works(client, signup_data, django_user_model):
     REDIRECT_URL = '/subjects/'
 
@@ -108,9 +112,3 @@ def test_signup_shows_welcome_message(client, signup_data):
     response = client.post('/signup/', signup_data, follow=True)
     assertRedirects(response, REDIRECT_URL)
     assertContains(response, 'Welcome to Lumino. Nice to see you!')
-
-
-@pytest.mark.django_db
-def test_signup_contains_a_link_to_login(client):
-    response = client.get('/signup/')
-    assertContains(response, 'href="/login/"')

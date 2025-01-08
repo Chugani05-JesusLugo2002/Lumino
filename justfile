@@ -116,6 +116,35 @@ reset-db: && create-su
 rq: check-venv redis
     ./manage.py rqworker
 
+# Generate fake data and populate Django database
+[private]
+@gen-data *args: check-venv
+    #!/usr/bin/env bash
+    ./manage.py clean_data
+    ./manage.py gen_data {{ args }}
+
+# Dump fixtures
+[private]
+dump-data: gen-data
+    #!/usr/bin/env bash
+    mkdir -p fixtures
+    ./manage.py dumpdata --format json --indent 2 auth -o fixtures/auth.json
+    ./manage.py dumpdata --format json --indent 2 users -o fixtures/users.json
+    ./manage.py dumpdata --format json --indent 2 subjects -o fixtures/subjects.json
+
+# Load fixtures into database
+load-data: check-venv
+    #!/usr/bin/env bash
+    ./manage.py clean_data
+    ./manage.py loaddata fixtures/auth.json
+    ./manage.py loaddata fixtures/users.json
+    ./manage.py loaddata fixtures/subjects.json
+    echo ---------------------------
+    echo ↓ Users with password: 1234
+    echo ---------------------------
+    echo
+    ./manage.py show_users
+
 # ==============================================================================
 # MISC RECIPES
 # ==============================================================================

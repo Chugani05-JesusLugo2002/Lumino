@@ -27,9 +27,9 @@ def test_user_detail_displays_all_elements(client, student, teacher):
 
 
 @pytest.mark.django_db
-def test_user_detail_contains_link_to_edit_profile(client, user_with_profile):
-    client.force_login(user_with_profile)
-    response = client.get(f'/users/{user_with_profile.username}/')
+def test_user_detail_contains_link_to_edit_profile(client, user):
+    client.force_login(user)
+    response = client.get(f'/users/{user.username}/')
     assert response.status_code == HTTPStatus.OK
     assertContains(response, '/user/edit/')
 
@@ -51,21 +51,21 @@ def test_user_detail_as_teacher_does_not_contain_link_to_leave(client, teacher):
 
 
 @pytest.mark.django_db
-def test_edit_profile_contains_right_user_info(client, user_with_profile):
-    client.force_login(user_with_profile)
+def test_edit_profile_contains_right_user_info(client, user):
+    client.force_login(user)
     response = client.get('/user/edit/')
-    assertContains(response, user_with_profile.profile.avatar.url)
-    assertContains(response, user_with_profile.profile.bio)
+    assertContains(response, user.profile.avatar.url)
+    assertContains(response, user.profile.bio)
 
 
 @pytest.mark.django_db
-def test_edit_profile_works_properly(client, user_with_profile, fake, image):
+def test_edit_profile_works_properly(client, user, fake, image):
     try:
-        client.force_login(user_with_profile)
+        client.force_login(user)
         payload = dict(bio=fake.paragraph(), avatar=image)
         response = client.post('/user/edit/', payload, follow=True)
-        assertRedirects(response, f'/users/{user_with_profile.username}/')
-        profile = Profile.objects.get(user=user_with_profile)
+        assertRedirects(response, f'/users/{user.username}/')
+        profile = Profile.objects.get(user=user)
         assert profile.bio == payload['bio']
         assert profile.avatar.size == image.size, 'Error al guardar la imagen de avatar.'
         assertContains(response, 'User profile has been successfully saved.')
@@ -92,3 +92,11 @@ def test_leave_is_forbidden_for_teachers(client, teacher):
     client.force_login(teacher)
     response = client.get('/user/leave/')
     assert response.status_code == HTTPStatus.FORBIDDEN
+
+
+@pytest.mark.django_db
+def test_profile_is_created_after_user_saved(django_user_model, fake):
+    user = django_user_model.objects.create_user(
+        username=fake.user_name(), password=fake.password()
+    )
+    assert user.profile is not None

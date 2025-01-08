@@ -7,6 +7,7 @@ from django.core.mail import EmailMessage
 from model_bakery import baker
 from pytest_django.asserts import assertContains, assertNotContains, assertRedirects
 
+from shared.management.commands import subject_stats
 from subjects.models import Enrollment
 from subjects.tasks import deliver_certificate
 
@@ -197,6 +198,34 @@ def test_lesson_detail_is_forbidden_for_non_enrolled_students(client, student):
     client.force_login(student)
     response = client.get(f'/subjects/{subject.code}/lessons/{lesson.pk}/')
     assert response.status_code == HTTPStatus.FORBIDDEN
+
+
+@pytest.mark.django_db
+def test_edit_lesson_link_does_not_exist_in_subject_detail_for_students(client, student):
+    EDIT_LESSON_URL = '/subjects/{subject_code}/lessons/{lesson_pk}/edit/'
+
+    enrollment = baker.make_recipe('tests.enrollment', student=student)
+    subject = enrollment.subject
+    lesson = baker.make_recipe('tests.lesson', subject=subject)
+    lesson_detail_url = EDIT_LESSON_URL.format(subject_code=subject.code, lesson_pk=lesson.pk)
+    client.force_login(student)
+    response = client.get(f'/subjects/{subject.code}/lessons/{lesson.pk}/')
+    href = f'href="{lesson_detail_url}"'
+    assertNotContains(response, href)
+
+
+@pytest.mark.django_db
+def test_delete_lesson_link_does_not_exist_in_subject_detail_for_students(client, student):
+    DELETE_LESSON_URL = '/subjects/{subject_code}/lessons/{lesson_pk}/delete/'
+
+    enrollment = baker.make_recipe('tests.enrollment', student=student)
+    subject = enrollment.subject
+    lesson = baker.make_recipe('tests.lesson', subject=subject)
+    lesson_detail_url = DELETE_LESSON_URL.format(subject_code=subject.code, lesson_pk=lesson.pk)
+    client.force_login(student)
+    response = client.get(f'/subjects/{subject.code}/lessons/{lesson.pk}/')
+    href = f'href="{lesson_detail_url}"'
+    assertNotContains(response, href)
 
 
 @pytest.mark.django_db
@@ -638,3 +667,69 @@ def test_edit_is_forbidden_for_students(client, teacher):
     client.force_login(teacher)
     response = client.get(f'/subjects/{subject.code}/marks/edit/')
     assert response.status_code == HTTPStatus.FORBIDDEN
+
+
+# ==============================================================================
+# MANAGEMENT COMMANDS
+# ==============================================================================
+
+
+@pytest.mark.django_db
+def test_management_command_to_show_subject_stats(capsys):
+    command = subject_stats.Command()
+    test_data = []
+    available_marks = list(range(1, 11)) + [None]
+    for _ in range(10):
+        subject = baker.make_recipe('tests.subject')
+        marks = []
+        for _ in range(10):
+            mark = random.choice(available_marks)
+            baker.make_recipe('tests.enrollment', mark=mark, subject=subject, _quantity=20)
+            if mark is not None:
+                marks.append(mark)
+        avg_mark = sum(marks) / len(marks)
+        test_data.append({'subject': subject, 'avg_mark': avg_mark})
+    command.handle()
+    excected_output = '\n'.join(f'{d['subject'].code}: {d['avg_mark']:.2f}' for d in test_data)
+    captured = capsys.readouterr()
+    assert captured.out.strip() == excected_output
+
+
+# ==============================================================================
+# I18N
+# ==============================================================================
+
+
+@pytest.mark.django_db
+def test_i18n_in_subject_list(client, teacher):
+    client.force_login(teacher)
+    client.get('/subjects/')
+    response = client.get('/setlang/en/', follow=True)
+    assertContains(response, 'My subjects')
+    response = client.get('/setlang/es/', follow=True)
+    assertContains(response, 'Mis módulos')
+
+
+# ==============================================================================
+# CONTEXT PROCESSOR
+# ==============================================================================
+
+
+@pytest.mark.django_db
+def test_subjects_are_available_for_teachers_in_all_templates_through_context_processor(
+    client, teacher
+):
+    subjects = baker.make_recipe('tests.subject', teacher=teacher, _quantity=10)
+    client.force_login(teacher)
+    response = client.get(f'/users/{teacher.username}/')
+    assert list(response.context['subjects']) == subjects
+
+
+@pytest.mark.django_db
+def test_subjects_are_available_for_students_in_all_templates_through_context_processor(
+    client, student
+):
+    enrollments = baker.make_recipe('tests.enrollment', student=student, _quantity=10)
+    client.force_login(student)
+    response = client.get(f'/users/{student.username}/')
+    assert list(response.context['subjects']) == [e.subject for e in enrollments]
