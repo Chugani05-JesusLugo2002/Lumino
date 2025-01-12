@@ -83,7 +83,7 @@ class EditMarkFormSetHelper(FormHelper):
         self.layout = Layout(
             Row(
                 HTML(
-                    '{% load subject_extras %} <div class="col-md-2">{% edit_mark_student_label formset forloop.counter0 %}</div>'
+                    '{% load subject_extras %} <div class="col-md-2">{% student_label formset=formset form_index=forloop.counter0 %}</div>'
                 ),
                 Field('mark', wrapper_class='col-md-2'),
                 css_class='align-items-baseline',

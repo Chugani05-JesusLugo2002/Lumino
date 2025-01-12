@@ -1,8 +1,9 @@
 {% load thumbnail %}
+{% load fullname from users_extras %}
 
 <span>
-    {% thumbnail avatar "36x36" format="PNG" as im %}
-        <img class="mx-2" src="{{ im.url }}" alt="{{ name }} avatar">
+    {% thumbnail student.profile.avatar "36x36" format="PNG" as im %}
+        <img class="mx-2" src="{{ im.url }}" alt="{{ student.name }} avatar">
     {% endthumbnail %}
-    <b>{{ name|title }}</b>
+    <a href="{{ student.profile.get_absolute_url }}" class="fw-bold text-decoration-none">{{ student|fullname }}</a>
 </span>

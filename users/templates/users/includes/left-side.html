@@ -5,5 +5,5 @@
     {% thumbnail target_user.profile.avatar "120x120" as avatar %}
       <img src="{{ avatar.url }}" alt="{{ target_user }} avatar" width="120" height="120" class="rounded-circle border border-3 border-light mx-auto mb-3">
     {% endthumbnail %}
-    <h5>{{ user|fullname }}</h5>
+    <h5>{{ target_user|fullname }}</h5>
 </div>
