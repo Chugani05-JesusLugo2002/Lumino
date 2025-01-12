@@ -1,0 +1,12 @@
+<div class="btn-group dropup">
+  <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+    {{ current_flag }}
+  </button>
+  <ul class="dropdown-menu">
+    {% for lang, flag in languages.items %}
+      <li>
+        <a class="dropdown-item" href="{% url 'setlang' lang %}?next={{ next }}">{{ flag }} {{ lang }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>  
