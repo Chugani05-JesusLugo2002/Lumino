@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+
 from prettyconf import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -73,7 +74,6 @@ MARKDOWNIFY = {
 }
 
 
-
 RQ_QUEUES = {
     'default': {
         'HOST': 'localhost',
@@ -112,6 +112,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'subjects.context_processors.subjects',
             ],
         },
     },

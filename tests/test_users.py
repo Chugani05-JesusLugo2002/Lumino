@@ -19,7 +19,7 @@ def test_user_detail_displays_all_elements(client, student, teacher):
     assertContains(response, student.profile.bio)
     response_text = response.content.decode()
     # sorl-thumbnail creates this path for thumbnails
-    assert re.search(r'<img src="/media/cache.*?"', response_text)
+    assert re.search(r'<img.*?src="/media/cache.*?"', response_text)
 
     response = client.get(f'/users/{teacher.username}/')
     assert response.status_code == HTTPStatus.OK

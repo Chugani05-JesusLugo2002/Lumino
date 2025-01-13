@@ -3,19 +3,25 @@ from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect, render
-from django.urls import reverse
 
-from .forms import AddLessonForm, EditLessonForm, EditMarkForm, EnrollmentForm, EditMarkFormSetHelper
+from shared.utils import assert_enrollment, assert_role
+from users.models import Profile
+
+from .forms import (
+    AddLessonForm,
+    EditLessonForm,
+    EditMarkForm,
+    EditMarkFormSetHelper,
+    EnrollmentForm,
+)
 from .models import Enrollment, Lesson, Subject
 from .tasks import deliver_certificate
-from users.models import Profile
-from shared.utils import assert_role, assert_enrollment
 
 
 @login_required
 def subject_list(request: HttpRequest) -> HttpResponse:
-    subjects = request.user.profile.get_subjects()
-    return render(request, 'subjects/subject/list.html', dict(subjects=subjects))
+    return render(request, 'subjects/subject/list.html')
+
 
 @login_required
 @assert_enrollment
@@ -24,12 +30,16 @@ def subject_detail(request: HttpRequest, subject_code: str) -> HttpResponse | Ht
     lessons = subject.lessons.all()
     return render(request, 'subjects/subject/detail.html', dict(subject=subject, lessons=lessons))
 
+
 @login_required
 @assert_enrollment
-def lesson_detail(request: HttpRequest, subject_code: str, lesson_pk: int) -> HttpResponse | HttpResponseForbidden:
+def lesson_detail(
+    request: HttpRequest, subject_code: str, lesson_pk: int
+) -> HttpResponse | HttpResponseForbidden:
     lesson = Lesson.objects.get(pk=lesson_pk)
     subject = lesson.subject
     return render(request, 'subjects/lesson/detail.html', dict(subject=subject, lesson=lesson))
+
 
 @login_required
 @assert_enrollment
@@ -52,7 +62,10 @@ def edit_lesson(
 ) -> HttpResponse | HttpResponseForbidden:
     lesson = Lesson.objects.get(pk=lesson_pk)
     subject = lesson.subject
-    if request.method == 'POST' and (form := EditLessonForm(request.POST, instance=lesson)).is_valid():
+    if (
+        request.method == 'POST'
+        and (form := EditLessonForm(request.POST, instance=lesson)).is_valid()
+    ):
         lesson = form.save()
         messages.add_message(request, messages.SUCCESS, 'Changes were successfully saved.')
     form = EditLessonForm(instance=lesson)
@@ -88,7 +101,10 @@ def edit_marks(request: HttpRequest, subject_code: str) -> HttpResponse | HttpRe
     subject = Subject.objects.get(code=subject_code)
     MarkFormSet = modelformset_factory(Enrollment, EditMarkForm, extra=0)
     queryset = subject.enrollments.all()
-    if request.method == 'POST' and (formset := MarkFormSet(queryset=queryset, data=request.POST)).is_valid():
+    if (
+        request.method == 'POST'
+        and (formset := MarkFormSet(queryset=queryset, data=request.POST)).is_valid()
+    ):
         formset.save()
         messages.add_message(request, messages.SUCCESS, 'Marks were successfully saved.')
     formset = MarkFormSet(queryset=queryset)
@@ -106,7 +122,9 @@ def enroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbidde
     if request.method == 'POST':
         if (form := EnrollmentForm(request.user, enrolling=True, data=request.POST)).is_valid():
             form.enrolls(request.user)
-            messages.add_message(request, messages.SUCCESS, 'Successfully enrolled in the chosen subjects.')
+            messages.add_message(
+                request, messages.SUCCESS, 'Successfully enrolled in the chosen subjects.'
+            )
             return redirect('subjects:subject-list')
     else:
         form = EnrollmentForm(request.user)
@@ -119,7 +137,9 @@ def unenroll_subjects(request: HttpRequest) -> HttpResponse | HttpResponseForbid
     if request.method == 'POST':
         if (form := EnrollmentForm(request.user, enrolling=False, data=request.POST)).is_valid():
             form.unenrolls(request.user)
-            messages.add_message(request, messages.SUCCESS, 'Successfully unenrolled from the chosen subjects.')
+            messages.add_message(
+                request, messages.SUCCESS, 'Successfully unenrolled from the chosen subjects.'
+            )
             return redirect('subjects:subject-list')
     else:
         form = EnrollmentForm(request.user, enrolling=False)
