@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Certificate send{% endblock %}
+{% block title %}Certificate request{% endblock %}
 
 {% block main %}
     <section class="my-3 d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
             <a href="{% url "subjects:subject-list" %}" class="h2 mx-3" data-bs-toggle="tooltip" data-bs-title="Back to subjects"><i class="bi bi-arrow-left-circle-fill"></i></a> 
-            <h1>Your grade certificate has been sent.</h1>
+            <h1>Your grade certificate has been requested.</h1>
         </div>
     </section>
     <h3>You will get the grade certificate quite soon at {{ user.email }}</h3>

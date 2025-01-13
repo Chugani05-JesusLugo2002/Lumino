@@ -5,6 +5,7 @@ from django.urls import reverse
 
 class Profile(models.Model):
     DEFAULT_AVATAR_URL = 'avatars/noavatar.png'
+
     class Role(models.TextChoices):
         STUDENT = 'S', 'Student'
         TEACHER = 'T', 'Teacher'
@@ -22,13 +23,9 @@ class Profile(models.Model):
 
     def __str__(self) -> str:
         return f'{self.get_role_display()} {self.user.first_name.title()} {self.user.last_name.title()}'
-    
-    def can_request_certificate(self) -> bool:
-        return self.is_student and self.user.enrollments.all().count() > 0 and self.user.enrollments.filter(mark=None).count() == 0
 
     def get_subjects(self):
         return self.user.enrolled.all() if self.is_student else self.user.taught.all()
-    
+
     def get_absolute_url(self):
-        return reverse("user-detail", kwargs={"username": self.user})
-    
+        return reverse('user-detail', kwargs={'username': self.user})

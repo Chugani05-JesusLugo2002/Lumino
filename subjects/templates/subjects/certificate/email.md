@@ -1,3 +1,5 @@
-# Este es un correo de prueba
+{% load users_extras %}
 
-## Para mi estudiante {{ student }}
+Dear {{ student|fullname }}, here is the certificate you requested.
+<br>
+Thank you for trusting **Lumino** with your education.

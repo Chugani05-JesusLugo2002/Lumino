@@ -1,14 +1,20 @@
-from django_rq import job
+import datetime
+
+from django.conf import settings
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-from django.conf import settings
-from weasyprint import HTML
+from django_rq import job
 from markdown import markdown
-import datetime
+from weasyprint import HTML
+
 
 @job
 def deliver_certificate(base_url, student):
-    rendered = render_to_string('subjects/certificate/certificate.html', dict(student=student, today=datetime.date.today()))
+    enrollments = student.enrollments.all()
+    rendered = render_to_string(
+        'subjects/certificate/certificate.html',
+        dict(student=student, enrollments=enrollments, today=datetime.date.today()),
+    )
     output_path = settings.CERTIFICATE_DIR / f'{student.username}_grade_certificate.pdf'
     HTML(string=rendered, base_url=base_url).write_pdf(output_path)
     rendered = render_to_string('subjects/certificate/email.md', dict(student=student))

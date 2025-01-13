@@ -1,0 +1,12 @@
+{% load users_extras %}
+
+<h1>Grade Certificate</h1>
+
+<p>DATOS DEL ALUMNO:</p>
+<p>Nombre y Apellidos: {{ student|fullname }}</p>
+
+<p>The student {{ student|fullname }} of the establishment, in accordance with the current regulatory provisions, has obtained the following academic results:</p>
+
+{% for enroll in enrollments %}
+  <h1>{{ enroll }}</h1> 
+{% endfor %}

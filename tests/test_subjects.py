@@ -115,7 +115,10 @@ def test_enroll_subjects_works(client, student):
     response = client.post('/subjects/enroll/', payload, follow=True)
     assertContains(response, 'Successfully enrolled in the chosen subjects.')
     assertRedirects(response, '/subjects/')
-    assert list(student.enrolled.values_list('pk', flat=True)) == subject_pks
+    enrolled_subject_pks = list(
+        Enrollment.objects.filter(student=student).values_list('subject_id', flat=True)
+    )
+    assert enrolled_subject_pks == subject_pks
 
 
 @pytest.mark.django_db
@@ -127,7 +130,10 @@ def test_unenroll_subjects_works(client, student):
     response = client.post('/subjects/unenroll/', payload, follow=True)
     assertContains(response, 'Successfully unenrolled from the chosen subjects.')
     assertRedirects(response, '/subjects/')
-    assert student.enrolled.count() == 0
+    enrolled_subject_pks = Enrollment.objects.filter(student=student).values_list(
+        'subject_id', flat=True
+    )
+    assert enrolled_subject_pks.count() == 0
 
 
 @pytest.mark.django_db
@@ -177,7 +183,9 @@ def test_subject_mark_appears_when_set(client, student):
     subject = enrollment.subject
     client.force_login(student)
     response = client.get(f'/subjects/{subject.code}/')
-    assertContains(response, enrollment.mark)
+    response_text = response.content.decode()
+    msg = rf'Your mark for this subject:.*?{enrollment.mark}'
+    assert re.search(msg, response_text, re.S | re.M)
 
 
 @pytest.mark.django_db
@@ -445,9 +453,9 @@ def test_add_lesson_is_forbidden_for_non_teaching_teachers(client, teacher):
 
 
 @pytest.mark.django_db
-def test_add_lesson_is_forbidden_for_students(client, teacher):
+def test_add_lesson_is_forbidden_for_students(client, student):
     subject = baker.make_recipe('tests.subject')
-    client.force_login(teacher)
+    client.force_login(student)
     response = client.get(f'/subjects/{subject.code}/lessons/add/')
     assert response.status_code == HTTPStatus.FORBIDDEN
 
@@ -527,10 +535,10 @@ def test_edit_lesson_works_properly(client, teacher, fake):
 
 
 @pytest.mark.django_db
-def test_edit_lesson_is_forbidden_for_students(client, teacher):
+def test_edit_lesson_is_forbidden_for_students(client, student):
     subject = baker.make_recipe('tests.subject')
     lesson = baker.make_recipe('tests.lesson', subject=subject)
-    client.force_login(teacher)
+    client.force_login(student)
     response = client.get(f'/subjects/{subject.code}/lessons/{lesson.pk}/edit/')
     assert response.status_code == HTTPStatus.FORBIDDEN
 
@@ -594,7 +602,7 @@ def test_mark_list_contains_link_to_edit_marks(client, teacher):
 
 
 @pytest.mark.django_db
-def test_mark_is_forbidden_for_non_teaching_teachers(client, teacher):
+def test_mark_list_is_forbidden_for_non_teaching_teachers(client, teacher):
     subject = baker.make_recipe('tests.subject')
     client.force_login(teacher)
     response = client.get(f'/subjects/{subject.code}/marks/')
@@ -602,9 +610,9 @@ def test_mark_is_forbidden_for_non_teaching_teachers(client, teacher):
 
 
 @pytest.mark.django_db
-def test_mark_is_forbidden_for_students(client, teacher):
+def test_mark_list_is_forbidden_for_students(client, student):
     subject = baker.make_recipe('tests.subject')
-    client.force_login(teacher)
+    client.force_login(student)
     response = client.get(f'/subjects/{subject.code}/marks/')
     assert response.status_code == HTTPStatus.FORBIDDEN
 
@@ -664,9 +672,9 @@ def test_edit_is_forbidden_for_non_teaching_teachers(client, teacher):
 
 
 @pytest.mark.django_db
-def test_edit_is_forbidden_for_students(client, teacher):
+def test_edit_is_forbidden_for_students(client, student):
     subject = baker.make_recipe('tests.subject')
-    client.force_login(teacher)
+    client.force_login(student)
     response = client.get(f'/subjects/{subject.code}/marks/edit/')
     assert response.status_code == HTTPStatus.FORBIDDEN
 
