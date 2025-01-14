@@ -47,7 +47,7 @@ def lesson_detail(
 def add_lesson(request: HttpRequest, subject_code: str) -> HttpResponse | HttpResponseForbidden:
     subject = Subject.objects.get(code=subject_code)
     if (form := AddLessonForm(subject, request.POST)).is_valid():
-        lesson = form.save()
+        form.save()
         messages.add_message(request, messages.SUCCESS, 'Lesson was successfully added.')
         return redirect(subject)
     form = AddLessonForm(subject)

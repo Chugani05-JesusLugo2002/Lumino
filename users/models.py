@@ -29,3 +29,8 @@ class Profile(models.Model):
 
     def get_absolute_url(self):
         return reverse('user-detail', kwargs={'username': self.user})
+
+    def can_request_certificate(self) -> bool:
+        have_enrolls = self.user.enrollments.all().count() > 0
+        have_all_marks = self.user.enrollments.filter(mark=None).count() == 0
+        return self.is_student and have_enrolls and have_all_marks
