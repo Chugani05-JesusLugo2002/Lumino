@@ -13,7 +13,11 @@ def deliver_certificate(base_url, student):
     enrollments = student.enrollments.all()
     rendered = render_to_string(
         'subjects/certificate/certificate.html',
-        dict(student=student, enrollments=enrollments, today=datetime.date.today()),
+        dict(
+            student=student,
+            enrollments=enrollments,
+            today=datetime.date.today().strftime('%M %d, %Y'),
+        ),
     )
     output_path = settings.CERTIFICATE_DIR / f'{student.username}_grade_certificate.pdf'
     HTML(string=rendered, base_url=base_url).write_pdf(output_path)
