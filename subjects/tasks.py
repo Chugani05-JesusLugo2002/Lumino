@@ -1,10 +1,10 @@
 import datetime
 
 from django.conf import settings
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage  # noqa
 from django.template.loader import render_to_string
 from django_rq import job
-from markdown import markdown
+from markdown import markdown  # noqa
 from weasyprint import HTML
 
 
@@ -16,7 +16,7 @@ def deliver_certificate(base_url, student):
         dict(
             student=student,
             enrollments=enrollments,
-            today=datetime.date.today().strftime('%M %d, %Y'),
+            today=datetime.date.today().strftime('%b %d, %Y'),
         ),
     )
     output_path = settings.CERTIFICATE_DIR / f'{student.username}_grade_certificate.pdf'
